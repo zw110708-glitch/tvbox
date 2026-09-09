@@ -1,0 +1,586 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-remote",
+        "address": "udp://1.1.1.1",
+        "address_resolver": "dns-direct"
+      },
+      {
+        "tag": "dns-trick-direct",
+        "address": "https://sky.rethinkdns.com/",
+        "detour": "direct-fragment"
+      },
+      {
+        "tag": "dns-direct",
+        "address": "223.5.5.5",
+        "address_resolver": "dns-local",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns-local",
+        "address": "local",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns-block",
+        "address": "rcode://success"
+      }
+    ],
+    "rules": [
+      {
+        "domain": [
+          "b.4.v.l.8.7.0.3.b.ar01-ae5.entry.v51124-1.qpon",
+          "y.g.t.l.h.g.v.3.b.ua01-ae5.entry.v51124-1.qpon",
+          "y.4.0.i.8.a.h.3.b.jp02-ae5.entry.v51124-1.qpon",
+          "y.g.t.i.h.a.v.3.b.jp04-ae5.entry.v51124-1.qpon",
+          "y.g.0.i.h.s.h.3.b.jp09-ae5.entry.v51124-1.qpon",
+          "y.d.t.l.h.a.0.3.b.sg03-ae5.entry.v51124-1.qpon",
+          "5.4.0.v.h.a.v.3.b.gb01-ae5.entry.v51124-1.qpon",
+          "b.4.v.l.8.7.0.3.b.hk10-vm5.entry.v51124-1.qpon",
+          "5.4.t.i.h.a.3.3.b.ca01-ae5.entry.v51124-1.qpon",
+          "5.4.t.l.t.a.h.3.b.fr01-ae5.entry.v51124-1.qpon",
+          "5.d.v.v.1.a.3.3.b.hk01-ae5.entry.v51124-1.qpon",
+          "b.g.t.6.h.a.v.3.b.hk02-ae5.entry.v51124-1.qpon",
+          "5.d.t.6.1.7.v.3.b.jp07-ae5.entry.v51124-1.qpon",
+          "b.4.0.6.t.s.v.3.b.hk08-ae5.entry.v51124-1.qpon",
+          "5.d.t.6.t.a.v.3.b.ru01-ae5.entry.v51124-1.qpon",
+          "5.4.t.l.t.g.v.3.b.kr01-ae5.entry.v51124-1.qpon",
+          "5.4.v.v.1.g.3.3.b.de01-ae5.entry.v51124-1.qpon",
+          "5.g.0.6.8.g.3.3.b.hk03-ae5.entry.v51124-1.qpon",
+          "bdvlha3.g01.jp05-vm5.entry.rtysjur.quest",
+          "b.g.0.v.8.g.0.3.b.hk07-ae5.entry.v51124-1.qpon",
+          "y.d.v.6.h.s.3.3.b.jp10-ae5.entry.v51124-1.qpon",
+          "5.4.0.v.t.7.0.3.b.hk11-vm5.entry.v51124-1.qpon",
+          "y.4.v.v.8.a.h.3.b.jp11-ae5.entry.v51124-1.qpon",
+          "5.d.t.i.1.7.h.3.b.jp01-ae5.entry.v51124-1.qpon",
+          "y.g.t.i.1.g.3.3.b.hk04-ae5.entry.v51124-1.qpon",
+          "y.d.0.6.t.s.h.3.b.hk05-ae5.entry.v51124-1.qpon",
+          "y.4.0.l.h.7.v.3.b.jp08-ae5.entry.v51124-1.qpon",
+          "y.d.t.i.8.s.3.3.b.in01-ae5.entry.v51124-1.qpon",
+          "b.g.t.l.h.7.v.3.b.jp03-ae5.entry.v51124-1.qpon",
+          "y.4.t.v.1.g.3.3.b.hk06-ae5.entry.v51124-1.qpon",
+          "b4ti1sh.g01.jp06-vm5.entry.rtysjur.quest",
+          "y.4.t.l.1.7.h.3.b.hk09-vm5.entry.v51124-1.qpon",
+          "y.4.t.i.h.s.3.3.b.tr01-ae5.entry.v51124-1.qpon",
+          "5.g.t.6.t.a.h.3.b.au01-ae5.entry.v51124-1.qpon"
+        ],
+        "server": "dns-direct"
+      },
+      {
+        "domain": "cp.cloudflare.com",
+        "server": "dns-remote",
+        "rewrite_ttl": 3000
+      },
+      {
+        "domain_suffix": ".cn",
+        "server": "dns-direct"
+      },
+      {
+        "rule_set": [
+          "geoip-cn",
+          "geosite-cn"
+        ],
+        "server": "dns-direct"
+      }
+    ],
+    "final": "dns-remote",
+    "static_ips": {
+      "sky.rethinkdns.com": [
+        "104.17.147.22",
+        "104.17.148.22",
+        "2606:4700:20::681a:e1e",
+        "2606:4700:20::681a:f1e",
+        "2606:4700:20::ac43:46fe",
+        "172.67.70.254",
+        "104.26.14.30",
+        "104.26.15.30"
+      ]
+    },
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "mtu": 9000,
+      "inet4_address": "172.19.0.1/28",
+      "auto_route": true,
+      "strict_route": true,
+      "endpoint_independent_nat": true,
+      "stack": "gvisor",
+      "sniff": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 12334,
+      "sniff": true,
+      "sniff_override_destination": true
+    },
+    {
+      "type": "direct",
+      "tag": "dns-in",
+      "listen": "127.0.0.1",
+      "listen_port": 16450
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "select",
+      "outbounds": [
+        "auto",
+        "🇭🇰 香港W01",
+        "🇯🇵 日本W01 | IEPL",
+        "🇭🇰 香港W02 | IEPL",
+        "🇯🇵 日本W02 | IEPL",
+        "🇭🇰 香港W03 | IEPL",
+        "🇯🇵 日本W03 | IEPL",
+        "🇭🇰 香港W04 | IEPL",
+        "🇯🇵 日本W04 | IEPL",
+        "🇭🇰 香港W05 | IEPL",
+        "🇯🇵 日本W05 | 下载专用 | x0.01",
+        "🇭🇰 香港W06 | x0.8",
+        "🇯🇵 日本W06 | 下载专用 | x0.01",
+        "🇭🇰 香港W07 | x0.8",
+        "🇯🇵 日本W07 | IEPL",
+        "🇭🇰 香港W08 | x0.8",
+        "🇯🇵 日本W08 | IEPL",
+        "🇭🇰 香港W09 | IEPL",
+        "🇯🇵 日本W09 | IEPL",
+        "🇭🇰 香港W10 | IEPL",
+        "🇯🇵 日本W10 | IEPL",
+        "🇭🇰 香港W11 | IEPL",
+        "🇯🇵 日本W11 | IEPL",
+        "🇬🇧 英国W01",
+        "🇦🇷 阿根廷W01",
+        "🇷🇺 俄罗斯W01",
+        "🇹🇷 土耳其W01",
+        "🇰🇷 韩国W01",
+        "🇮🇳 印度W01",
+        "🇩🇪 德国W01",
+        "🇨🇦 加拿大W01",
+        "🇦🇺 澳大利亚W01",
+        "🇫🇷 法国W01",
+        "🇺🇦 乌克兰W01"
+      ],
+      "default": "auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "auto",
+      "outbounds": [
+        "🇭🇰 香港W01",
+        "🇯🇵 日本W01 | IEPL",
+        "🇭🇰 香港W02 | IEPL",
+        "🇯🇵 日本W02 | IEPL",
+        "🇭🇰 香港W03 | IEPL",
+        "🇯🇵 日本W03 | IEPL",
+        "🇭🇰 香港W04 | IEPL",
+        "🇯🇵 日本W04 | IEPL",
+        "🇭🇰 香港W05 | IEPL",
+        "🇯🇵 日本W05 | 下载专用 | x0.01",
+        "🇭🇰 香港W06 | x0.8",
+        "🇯🇵 日本W06 | 下载专用 | x0.01",
+        "🇭🇰 香港W07 | x0.8",
+        "🇯🇵 日本W07 | IEPL",
+        "🇭🇰 香港W08 | x0.8",
+        "🇯🇵 日本W08 | IEPL",
+        "🇭🇰 香港W09 | IEPL",
+        "🇯🇵 日本W09 | IEPL",
+        "🇭🇰 香港W10 | IEPL",
+        "🇯🇵 日本W10 | IEPL",
+        "🇭🇰 香港W11 | IEPL",
+        "🇯🇵 日本W11 | IEPL",
+        "🇬🇧 英国W01",
+        "🇦🇷 阿根廷W01",
+        "🇷🇺 俄罗斯W01",
+        "🇹🇷 土耳其W01",
+        "🇰🇷 韩国W01",
+        "🇮🇳 印度W01",
+        "🇩🇪 德国W01",
+        "🇨🇦 加拿大W01",
+        "🇦🇺 澳大利亚W01",
+        "🇫🇷 法国W01",
+        "🇺🇦 乌克兰W01"
+      ],
+      "url": "http://cp.cloudflare.com",
+      "interval": "10m0s",
+      "tolerance": 1,
+      "idle_timeout": "30m0s",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇭🇰 香港W01",
+      "server": "5.d.v.v.1.a.3.3.b.hk01-ae5.entry.v51124-1.qpon",
+      "server_port": 19272,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇯🇵 日本W01 | IEPL",
+      "server": "5.d.t.i.1.7.h.3.b.jp01-ae5.entry.v51124-1.qpon",
+      "server_port": 473,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇭🇰 香港W02 | IEPL",
+      "server": "b.g.t.6.h.a.v.3.b.hk02-ae5.entry.v51124-1.qpon",
+      "server_port": 14560,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇯🇵 日本W02 | IEPL",
+      "server": "y.4.0.i.8.a.h.3.b.jp02-ae5.entry.v51124-1.qpon",
+      "server_port": 483,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇭🇰 香港W03 | IEPL",
+      "server": "5.g.0.6.8.g.3.3.b.hk03-ae5.entry.v51124-1.qpon",
+      "server_port": 760,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇯🇵 日本W03 | IEPL",
+      "server": "b.g.t.l.h.7.v.3.b.jp03-ae5.entry.v51124-1.qpon",
+      "server_port": 488,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇭🇰 香港W04 | IEPL",
+      "server": "y.g.t.i.1.g.3.3.b.hk04-ae5.entry.v51124-1.qpon",
+      "server_port": 804,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇯🇵 日本W04 | IEPL",
+      "server": "y.g.t.i.h.a.v.3.b.jp04-ae5.entry.v51124-1.qpon",
+      "server_port": 493,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇭🇰 香港W05 | IEPL",
+      "server": "y.d.0.6.t.s.h.3.b.hk05-ae5.entry.v51124-1.qpon",
+      "server_port": 1812,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "vmess",
+      "tag": "🇯🇵 日本W05 | 下载专用 | x0.01",
+      "server": "bdvlha3.g01.jp05-vm5.entry.rtysjur.quest",
+      "server_port": 64655,
+      "uuid": "cdd06eb5-236a-328c-a06b-92a52faac8bf",
+      "security": "auto",
+      "alter_id": 1
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇭🇰 香港W06 | x0.8",
+      "server": "y.4.t.v.1.g.3.3.b.hk06-ae5.entry.v51124-1.qpon",
+      "server_port": 1413,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "vmess",
+      "tag": "🇯🇵 日本W06 | 下载专用 | x0.01",
+      "server": "b4ti1sh.g01.jp06-vm5.entry.rtysjur.quest",
+      "server_port": 663,
+      "uuid": "cdd06eb5-236a-328c-a06b-92a52faac8bf",
+      "security": "auto",
+      "alter_id": 1
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇭🇰 香港W07 | x0.8",
+      "server": "b.g.0.v.8.g.0.3.b.hk07-ae5.entry.v51124-1.qpon",
+      "server_port": 1420,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇯🇵 日本W07 | IEPL",
+      "server": "5.d.t.6.1.7.v.3.b.jp07-ae5.entry.v51124-1.qpon",
+      "server_port": 14005,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇭🇰 香港W08 | x0.8",
+      "server": "b.4.0.6.t.s.v.3.b.hk08-ae5.entry.v51124-1.qpon",
+      "server_port": 18643,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇯🇵 日本W08 | IEPL",
+      "server": "y.4.0.l.h.7.v.3.b.jp08-ae5.entry.v51124-1.qpon",
+      "server_port": 12543,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "vmess",
+      "tag": "🇭🇰 香港W09 | IEPL",
+      "server": "y.4.t.l.1.7.h.3.b.hk09-vm5.entry.v51124-1.qpon",
+      "server_port": 15265,
+      "uuid": "cdd06eb5-236a-328c-a06b-92a52faac8bf",
+      "security": "auto",
+      "alter_id": 1
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇯🇵 日本W09 | IEPL",
+      "server": "y.g.0.i.h.s.h.3.b.jp09-ae5.entry.v51124-1.qpon",
+      "server_port": 11158,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "vmess",
+      "tag": "🇭🇰 香港W10 | IEPL",
+      "server": "b.4.v.l.8.7.0.3.b.hk10-vm5.entry.v51124-1.qpon",
+      "server_port": 13483,
+      "uuid": "cdd06eb5-236a-328c-a06b-92a52faac8bf",
+      "security": "auto",
+      "alter_id": 1,
+      "transport": {
+        "type": "ws",
+        "path": "/",
+        "headers": {
+          "Host": "speedtest-bgp-01-10.entry-0.chinasnow.net"
+        }
+      }
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇯🇵 日本W10 | IEPL",
+      "server": "y.d.v.6.h.s.3.3.b.jp10-ae5.entry.v51124-1.qpon",
+      "server_port": 16524,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "vmess",
+      "tag": "🇭🇰 香港W11 | IEPL",
+      "server": "5.4.0.v.t.7.0.3.b.hk11-vm5.entry.v51124-1.qpon",
+      "server_port": 575,
+      "uuid": "cdd06eb5-236a-328c-a06b-92a52faac8bf",
+      "security": "auto",
+      "alter_id": 1,
+      "transport": {
+        "type": "ws",
+        "path": "/tutorial/iphone13.m3u8",
+        "headers": {
+          "Host": "speedtest-bgp-01-11.entry-0.chinasnow.net"
+        }
+      }
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇯🇵 日本W11 | IEPL",
+      "server": "y.4.v.v.8.a.h.3.b.jp11-ae5.entry.v51124-1.qpon",
+      "server_port": 17741,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇬🇧 英国W01",
+      "server": "5.4.0.v.h.a.v.3.b.gb01-ae5.entry.v51124-1.qpon",
+      "server_port": 20020,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇦🇷 阿根廷W01",
+      "server": "b.4.v.l.8.7.0.3.b.ar01-ae5.entry.v51124-1.qpon",
+      "server_port": 20025,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇷🇺 俄罗斯W01",
+      "server": "5.d.t.6.t.a.v.3.b.ru01-ae5.entry.v51124-1.qpon",
+      "server_port": 20030,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇹🇷 土耳其W01",
+      "server": "y.4.t.i.h.s.3.3.b.tr01-ae5.entry.v51124-1.qpon",
+      "server_port": 20035,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇰🇷 韩国W01",
+      "server": "5.4.t.l.t.g.v.3.b.kr01-ae5.entry.v51124-1.qpon",
+      "server_port": 20040,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇮🇳 印度W01",
+      "server": "y.d.t.i.8.s.3.3.b.in01-ae5.entry.v51124-1.qpon",
+      "server_port": 20045,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇩🇪 德国W01",
+      "server": "5.4.v.v.1.g.3.3.b.de01-ae5.entry.v51124-1.qpon",
+      "server_port": 20050,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇨🇦 加拿大W01",
+      "server": "5.4.t.i.h.a.3.3.b.ca01-ae5.entry.v51124-1.qpon",
+      "server_port": 20055,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇦🇺 澳大利亚W01",
+      "server": "5.g.t.6.t.a.h.3.b.au01-ae5.entry.v51124-1.qpon",
+      "server_port": 20060,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇫🇷 法国W01",
+      "server": "5.4.t.l.t.a.h.3.b.fr01-ae5.entry.v51124-1.qpon",
+      "server_port": 20065,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "🇺🇦 乌克兰W01",
+      "server": "y.g.t.l.h.g.v.3.b.ua01-ae5.entry.v51124-1.qpon",
+      "server_port": 20070,
+      "method": "aes-256-gcm",
+      "password": "cdd06eb5-236a-328c-a06b-92a52faac8bf"
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "direct",
+      "tag": "direct-fragment",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-30",
+        "sleep": "2-8"
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "bypass"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "inbound": "tun-in",
+        "package_name": "app.hiddify.com",
+        "outbound": "bypass"
+      },
+      {
+        "inbound": "dns-in",
+        "outbound": "dns-out"
+      },
+      {
+        "port": 53,
+        "outbound": "dns-out"
+      },
+      {
+        "domain_suffix": ".cn",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "geoip-cn",
+          "geosite-cn"
+        ],
+        "outbound": "direct"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "geoip-cn",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geoip-cn.srs",
+        "update_interval": "120h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-cn",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geosite-cn.srs",
+        "update_interval": "120h0m0s"
+      }
+    ],
+    "final": "select",
+    "auto_detect_interface": true,
+    "override_android_vpn": true
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "clash.db"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:16756",
+      "secret": "SHNPKljmDjr1Bszj"
+    }
+  }
+}

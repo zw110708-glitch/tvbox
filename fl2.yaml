@@ -1,0 +1,681 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-remote",
+        "address": "udp://1.1.1.1",
+        "address_resolver": "dns-direct"
+      },
+      {
+        "tag": "dns-trick-direct",
+        "address": "https://sky.rethinkdns.com/",
+        "detour": "direct-fragment"
+      },
+      {
+        "tag": "dns-direct",
+        "address": "223.5.5.5",
+        "address_resolver": "dns-local",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns-local",
+        "address": "local",
+        "detour": "direct"
+      },
+      {
+        "tag": "dns-block",
+        "address": "rcode://success"
+      }
+    ],
+    "rules": [
+      {
+        "domain": [
+          "pq.aws54.yydjc.top",
+          "pq.aws55.yydjc.top",
+          "pq.aws56.yydjc.top",
+          "pq.aws57.yydjc.top",
+          "kbgs.hinet.tw1.yydjc.top",
+          "pq.aws53.yydjc.top"
+        ],
+        "server": "dns-direct"
+      },
+      {
+        "domain": "cp.cloudflare.com",
+        "server": "dns-remote",
+        "rewrite_ttl": 3000
+      },
+      {
+        "domain_suffix": ".cn",
+        "server": "dns-direct"
+      },
+      {
+        "rule_set": [
+          "geoip-cn",
+          "geosite-cn"
+        ],
+        "server": "dns-direct"
+      }
+    ],
+    "final": "dns-remote",
+    "static_ips": {
+      "sky.rethinkdns.com": [
+        "104.17.147.22",
+        "104.17.148.22",
+        "104.26.14.30",
+        "104.26.15.30",
+        "172.67.70.254",
+        "2606:4700:20::ac43:46fe",
+        "2606:4700:20::681a:e1e",
+        "2606:4700:20::681a:f1e"
+      ]
+    },
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "mtu": 9000,
+      "inet4_address": "172.19.0.1/28",
+      "auto_route": true,
+      "strict_route": true,
+      "endpoint_independent_nat": true,
+      "stack": "gvisor",
+      "sniff": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 12334,
+      "sniff": true,
+      "sniff_override_destination": true
+    },
+    {
+      "type": "direct",
+      "tag": "dns-in",
+      "listen": "127.0.0.1",
+      "listen_port": 16450
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "select",
+      "outbounds": [
+        "auto",
+        "🇺🇸 美国圣何塞-0.1x-hy2",
+        "🇺🇸 美国圣何塞2-0.1x-hy2",
+        "🇺🇸 美国01-0.1x | 高速专线-hy2",
+        "🇯🇵 日本 | 高速专线-hy2",
+        "🇯🇵 日本2 | 高速专线-hy2",
+        "🇯🇵 日本3 | 高速专线-hy2",
+        "🇺🇸 美国圣何塞 | 高速专线",
+        "🇺🇸 美国圣何塞2 | 高速专线",
+        "🇺🇸 美国圣何塞3 | 高速专线",
+        "🇯🇵 日本东京01 | 移动联通推荐",
+        "🇯🇵 日本东京02 | 移动联通推荐",
+        "🇯🇵 日本东京03 | 移动联通推荐",
+        "🇹🇼 台湾Hinet",
+        "🇺🇸 美国01 | 电信联通推荐-0.1x",
+        "🇺🇸 美国02 | 电信联通推荐-0.1x",
+        "🇯🇵 日本东京01 | 电信联通推荐-0.1x",
+        "🇯🇵 日本东京02 | 电信联通推荐-0.1x",
+        "🇺🇸 美国阿什本",
+        "🇺🇸 美国圣何塞",
+        "🇮🇳 印度海得拉巴",
+        "🇮🇳 印度孟买",
+        "🇸🇬 新加坡"
+      ],
+      "default": "auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "auto",
+      "outbounds": [
+        "🇺🇸 美国圣何塞-0.1x-hy2",
+        "🇺🇸 美国圣何塞2-0.1x-hy2",
+        "🇺🇸 美国01-0.1x | 高速专线-hy2",
+        "🇯🇵 日本 | 高速专线-hy2",
+        "🇯🇵 日本2 | 高速专线-hy2",
+        "🇯🇵 日本3 | 高速专线-hy2",
+        "🇺🇸 美国圣何塞 | 高速专线",
+        "🇺🇸 美国圣何塞2 | 高速专线",
+        "🇺🇸 美国圣何塞3 | 高速专线",
+        "🇯🇵 日本东京01 | 移动联通推荐",
+        "🇯🇵 日本东京02 | 移动联通推荐",
+        "🇯🇵 日本东京03 | 移动联通推荐",
+        "🇹🇼 台湾Hinet",
+        "🇺🇸 美国01 | 电信联通推荐-0.1x",
+        "🇺🇸 美国02 | 电信联通推荐-0.1x",
+        "🇯🇵 日本东京01 | 电信联通推荐-0.1x",
+        "🇯🇵 日本东京02 | 电信联通推荐-0.1x",
+        "🇺🇸 美国阿什本",
+        "🇺🇸 美国圣何塞",
+        "🇮🇳 印度海得拉巴",
+        "🇮🇳 印度孟买",
+        "🇸🇬 新加坡"
+      ],
+      "url": "http://cp.cloudflare.com",
+      "interval": "10m0s",
+      "tolerance": 1,
+      "idle_timeout": "30m0s",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇺🇸 美国圣何塞-0.1x-hy2",
+      "server": "134.195.101.199",
+      "server_port": 443,
+      "password": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.apple.com"
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇺🇸 美国圣何塞2-0.1x-hy2",
+      "server": "134.195.101.199",
+      "server_port": 443,
+      "password": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.apple.com"
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇺🇸 美国01-0.1x | 高速专线-hy2",
+      "server": "208.87.242.77",
+      "server_port": 35000,
+      "password": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.apple.com"
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇯🇵 日本 | 高速专线-hy2",
+      "server": "pq.aws53.yydjc.top",
+      "server_port": 35000,
+      "password": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.apple.com"
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇯🇵 日本2 | 高速专线-hy2",
+      "server": "pq.aws54.yydjc.top",
+      "server_port": 35000,
+      "password": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.apple.com"
+      }
+    },
+    {
+      "type": "hysteria2",
+      "tag": "🇯🇵 日本3 | 高速专线-hy2",
+      "server": "pq.aws55.yydjc.top",
+      "server_port": 35000,
+      "password": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.apple.com"
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 美国圣何塞 | 高速专线",
+      "server": "134.195.101.187",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "iosapps.itunes.apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "ios"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "PuA87-QwgLpJr4WyqC0e2aMFShkeovMT6recdpHPaSc",
+          "short_id": "67af2e70"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 美国圣何塞2 | 高速专线",
+      "server": "134.195.101.187",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "iosapps.itunes.apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "safari"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "PuA87-QwgLpJr4WyqC0e2aMFShkeovMT6recdpHPaSc",
+          "short_id": "67af2e70"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 美国圣何塞3 | 高速专线",
+      "server": "134.195.101.187",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "iosapps.itunes.apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "safari"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "PuA87-QwgLpJr4WyqC0e2aMFShkeovMT6recdpHPaSc",
+          "short_id": "67af2e70"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇯🇵 日本东京01 | 移动联通推荐",
+      "server": "pq.aws56.yydjc.top",
+      "server_port": 35000,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "iosapps.itunes.apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "edge"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "yzIdIf5RpR-rTzlULRjJoCgcQdx3-yXKl7eT7IuThn4",
+          "short_id": "bb9ab0d5242d53e9"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇯🇵 日本东京02 | 移动联通推荐",
+      "server": "pq.aws57.yydjc.top",
+      "server_port": 35000,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "iosapps.itunes.apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "ios"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "yzIdIf5RpR-rTzlULRjJoCgcQdx3-yXKl7eT7IuThn4",
+          "short_id": "bb9ab0d5242d53e9"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇯🇵 日本东京03 | 移动联通推荐",
+      "server": "pq.aws57.yydjc.top",
+      "server_port": 35000,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "iosapps.itunes.apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "safari"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "yzIdIf5RpR-rTzlULRjJoCgcQdx3-yXKl7eT7IuThn4",
+          "short_id": "bb9ab0d5242d53e9"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇹🇼 台湾Hinet",
+      "server": "kbgs.hinet.tw1.yydjc.top",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "gopro.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "TMwVM6Se3KqnJX6ArrqsFyr5wDIuk9weurW38h8zIjQ",
+          "short_id": "5a337f9f"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 美国01 | 电信联通推荐-0.1x",
+      "server": "172.64.229.30",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "us1-us1.aiopen.sbs",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/kbjc/us1",
+        "headers": {
+          "Host": "us1-us1.aiopen.sbs"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 美国02 | 电信联通推荐-0.1x",
+      "server": "172.64.229.30",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "us1-us1.aiopen.sbs",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/kbjc/us1",
+        "headers": {
+          "Host": "us1-us1.aiopen.sbs"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇯🇵 日本东京01 | 电信联通推荐-0.1x",
+      "server": "172.64.229.30",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "jp1-jp1.aiopen.sbs",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/kbjc/jp1",
+        "headers": {
+          "Host": "jp1-jp1.aiopen.sbs"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇯🇵 日本东京02 | 电信联通推荐-0.1x",
+      "server": "172.64.229.30",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "jp1-jp1.aiopen.sbs",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/kbjc/jp1",
+        "headers": {
+          "Host": "jp1-jp1.aiopen.sbs"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 美国阿什本",
+      "server": "129.80.99.88",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "updates.cdn-apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "ios"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "CmZcK-NJ3i5iVDRiiBY3RpeiR2kooDbtJBOmPq29ABY",
+          "short_id": "0ccb4b57"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 美国圣何塞",
+      "server": "167.234.214.41",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "updates.cdn-apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "ios"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "06JHsYUKlIJoJdPoWORIEfgeNKRSRGHnfGZSLGRQ1zs",
+          "short_id": "2fe145b3"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇮🇳 印度海得拉巴",
+      "server": "129.159.17.27",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "updates.cdn-apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "safari"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "dMKDyievcyOty4qL9Y5kVfAZw8ey6IX0LNdHuGnQd1g",
+          "short_id": "c12d1c16"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇮🇳 印度孟买",
+      "server": "140.245.28.182",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "updates.cdn-apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "ios"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "sE7iHMdyFUNBBSGfqDm_XdIIgeEv734REAGl6oP-XAQ",
+          "short_id": "6c782575"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇬 新加坡",
+      "server": "138.2.84.141",
+      "server_port": 443,
+      "uuid": "7cb4e128-ef8e-4762-91a0-48d90fcbab53",
+      "flow": "xtls-rprx-vision",
+      "network": "tcp",
+      "tls": {
+        "enabled": true,
+        "server_name": "updates.cdn-apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "safari"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "hbbcQsDUAR-TCLLkdSOjXwnK6lI65RQQ4ZsAu9PQKF0",
+          "short_id": "c73d58ac"
+        }
+      }
+    },
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "direct",
+      "tag": "direct-fragment",
+      "tls_fragment": {
+        "enabled": true,
+        "size": "10-30",
+        "sleep": "2-8"
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "bypass"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "inbound": "tun-in",
+        "package_name": "app.hiddify.com",
+        "outbound": "bypass"
+      },
+      {
+        "inbound": "dns-in",
+        "outbound": "dns-out"
+      },
+      {
+        "port": 53,
+        "outbound": "dns-out"
+      },
+      {
+        "domain_suffix": ".cn",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "geoip-cn",
+          "geosite-cn"
+        ],
+        "outbound": "direct"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "geoip-cn",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geoip-cn.srs",
+        "update_interval": "120h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-cn",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geosite-cn.srs",
+        "update_interval": "120h0m0s"
+      }
+    ],
+    "final": "select",
+    "auto_detect_interface": true,
+    "override_android_vpn": true
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "clash.db"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:16756",
+      "secret": "fwezeS4Z06fYw030"
+    }
+  }
+}
