@@ -1,0 +1,1020 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ARCHIVE // 998</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060c16;
+    --panel:#0f1f34;
+    --panel-2:#142c46;
+    --line:#22405f;
+    --gold:#d9a840;
+    --gold-dim:#8a6b2c;
+    --cyan:#57d8de;
+    --ink:#e8edf3;
+    --slate:#5f7690;
+    --red:#b23b3b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--bg);}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Noto Sans SC', sans-serif;
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- ambient background ---------- */
+  .bg-canvas{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+  }
+  .bg-grid{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:.08;
+    animation:gridDrift 26s linear infinite;
+  }
+  @keyframes gridDrift{
+    from{ background-position:0 0, 0 0; }
+    to{ background-position:64px 64px, 64px 64px; }
+  }
+  .bg-vignette{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:radial-gradient(ellipse at 50% 0%, rgba(217,168,64,.06), transparent 60%),
+               radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.6), transparent 70%);
+  }
+  .scanlines{
+    position:fixed; inset:0; z-index:2; pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.12) 0px, rgba(0,0,0,.12) 1px, transparent 2px, transparent 3px);
+    opacity:.35;
+    mix-blend-mode:overlay;
+  }
+  .signal-lines{
+    position:fixed; top:0; left:0; width:100%; height:420px; z-index:0; pointer-events:none; opacity:.10;
+  }
+
+  /* ---------- layout shell ---------- */
+  .shell{
+    position:relative; z-index:1;
+    max-width:1080px; margin:0 auto;
+    padding:28px 20px 80px;
+    padding-top:calc(28px + var(--fm-ext-safe-top, 0px));
+    padding-bottom:calc(80px + var(--fm-ext-safe-bottom, 0px));
+  }
+
+  /* ---------- status bar ---------- */
+  .statusbar{
+    display:flex; align-items:center; justify-content:space-between;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:.12em; color:var(--slate);
+    padding-bottom:16px; margin-bottom:22px;
+    border-bottom:1px solid var(--line);
+  }
+  .statusbar .dot{
+    display:inline-block; width:7px; height:7px; border-radius:50%;
+    background:#3ddc84; margin-right:7px; vertical-align:1px;
+    box-shadow:0 0 8px #3ddc84;
+    animation:pulse 1.8s infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  .statusbar span.id{color:var(--gold);}
+  .statusbar .clock{ color:var(--cyan); letter-spacing:.14em; }
+  @media (max-width:560px){
+    .statusbar{ flex-direction:column; align-items:flex-start; gap:6px; }
+  }
+
+  /* ---------- header ---------- */
+  .masthead{ margin-bottom:34px; position:relative; }
+  .masthead .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:.3em; color:var(--cyan);
+    display:flex; align-items:center; gap:10px; margin-bottom:10px;
+  }
+  .masthead .eyebrow::before{
+    content:''; width:22px; height:1px; background:var(--cyan); display:inline-block;
+  }
+  .masthead h1{
+    font-family:'Oswald', sans-serif; font-weight:700;
+    font-size:clamp(34px, 7vw, 56px);
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    color:var(--ink);
+    line-height:1.02;
+  }
+  .masthead h1 em{
+    font-style:normal; color:var(--gold);
+  }
+  .masthead .sub{
+    margin-top:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px; color:var(--slate); letter-spacing:.04em;
+    max-width:560px;
+  }
+
+  /* ---------- section label ---------- */
+  .section-head{
+    display:flex; align-items:baseline; gap:14px;
+    margin:46px 0 16px;
+  }
+  .section-head .tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:.2em;
+    color:var(--bg); background:var(--gold);
+    padding:3px 8px; font-weight:700;
+  }
+  .section-head h2{
+    font-family:'Oswald', sans-serif; font-weight:600;
+    font-size:17px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--ink);
+  }
+  .section-head .rule{ flex:1; height:1px; background:var(--line); }
+
+  /* ---------- hero file (Eclipse) ---------- */
+  .hero-file{
+    position:relative;
+    background:linear-gradient(180deg, var(--panel) 0%, #0b1728 100%);
+    border:1px solid var(--line);
+    padding:0;
+    color:inherit; display:block;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .25s ease, border-color .25s ease;
+  }
+  .hero-file:hover{ transform:translateY(-2px); border-color:var(--gold-dim); }
+  .hero-file .band{
+    background:var(--gold); color:#1a1206;
+    font-family:'JetBrains Mono', monospace; font-weight:700;
+    font-size:12px; letter-spacing:.18em;
+    padding:9px 18px;
+    display:flex; justify-content:space-between;
+    position:relative; z-index:1;
+  }
+  .hero-file .thumb{
+    position:relative; width:100%; height:200px; overflow:hidden;
+    background:var(--panel-2);
+  }
+  .hero-file .thumb .iframe-wrap{
+    position:absolute; inset:0; overflow:hidden; pointer-events:none;
+  }
+  .hero-file .thumb .iframe-wrap iframe{
+    border:0; transform-origin:0 0; pointer-events:none;
+    filter:saturate(.9) brightness(.85) contrast(1.04);
+  }
+  .hero-file .thumb .thumb-loader{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:var(--panel-2); z-index:1;
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.12em; color:var(--slate);
+  }
+  .hero-file .thumb::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(6,12,22,0) 45%, rgba(6,12,22,.7) 100%);
+    pointer-events:none; z-index:2;
+  }
+  .hero-file .body{
+    padding:26px 24px 24px;
+    display:grid; grid-template-columns:1fr auto; gap:20px; align-items:end;
+  }
+  .hero-file .codename{
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.2em;
+    color:var(--slate); margin-bottom:6px;
+  }
+  .hero-file .name{
+    font-family:'Oswald', sans-serif; font-weight:700; font-size:44px;
+    letter-spacing:.02em; color:var(--ink); text-transform:uppercase;
+    line-height:1;
+    display:flex; align-items:center; gap:16px;
+  }
+  .hero-file .name svg{
+    width:38px; height:38px; flex:none;
+    stroke:var(--gold); fill:none; stroke-width:1.4;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+  .hero-file .note{
+    font-size:13px; color:var(--cyan); margin-top:14px;
+    font-family:'Noto Sans SC', sans-serif;
+  }
+  .hero-file .note b{ color:var(--cyan); font-weight:700; }
+  .hero-file .access{
+    text-align:right;
+  }
+  .hero-file .access .lbl{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.15em;
+    color:var(--slate); margin-bottom:4px;
+  }
+  .hero-file .access .url{
+    font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--gold);
+    white-space:nowrap;
+  }
+  .hatch{
+    width:34px; height:34px;
+    background-image:repeating-linear-gradient(45deg, var(--slate) 0, var(--slate) 1px, transparent 1px, transparent 6px);
+    opacity:.5; border:1px solid var(--line); flex:none;
+  }
+
+  /* ---------- file grid ---------- */
+  .file-grid{
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;
+  }
+  @media (max-width:620px){ .file-grid{ grid-template-columns:1fr; } }
+
+  .file{
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:inherit;
+    display:flex; flex-direction:column;
+    cursor:pointer;
+    transition:transform .2s ease, border-color .2s ease, background .2s ease;
+    position:relative;
+  }
+  .file:hover{ transform:translateY(-2px); border-color:var(--gold-dim); background:var(--panel-2); }
+  .file .head{
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--panel-2);
+    border-bottom:1px solid var(--line);
+    padding:8px 14px;
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.14em; color:var(--slate);
+  }
+  .file .head .num{ color:var(--gold); }
+  .file .thumb{
+    position:relative; width:100%; height:128px; overflow:hidden;
+    background:var(--panel-2); flex:none;
+  }
+  .file .thumb .iframe-wrap{
+    position:absolute; inset:0; overflow:hidden; pointer-events:none;
+  }
+  .file .thumb .iframe-wrap iframe{
+    border:0; transform-origin:0 0; pointer-events:none;
+    filter:saturate(.9) brightness(.9) contrast(1.04);
+    transition:filter .35s ease;
+  }
+  .file .thumb .thumb-loader{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:var(--panel-2); z-index:1;
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em; color:var(--slate);
+  }
+  .file .thumb::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(6,12,22,0) 55%, rgba(6,12,22,.55) 100%);
+    pointer-events:none; z-index:2;
+  }
+  .file:hover .thumb .iframe-wrap iframe{ filter:saturate(1) brightness(1) contrast(1.04); }
+  .file .main{ padding:16px 14px 14px; flex:1; display:flex; flex-direction:column; gap:8px; }
+  .file .title{
+    font-family:'Oswald', sans-serif; font-weight:600; font-size:20px;
+    letter-spacing:.02em; text-transform:uppercase; color:var(--ink);
+    display:flex; align-items:center; gap:9px;
+  }
+  .file .title svg{
+    width:18px; height:18px; flex:none;
+    stroke:var(--gold); fill:none; stroke-width:1.6;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+  .file .url{
+    font-family:'JetBrains Mono', monospace; font-size:11.5px; color:var(--gold-dim);
+    word-break:break-all;
+  }
+  .file .note{
+    font-size:12px; color:var(--cyan); opacity:.9; margin-top:2px;
+  }
+  .file .arrow{
+    align-self:flex-end; margin-top:auto;
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--slate);
+    display:flex; align-items:center; gap:5px;
+  }
+  .file:hover .arrow{ color:var(--gold); }
+  .arrow::after{ content:'⧉'; font-size:12px; }
+
+  /* ---------- entrance animation ---------- */
+  @keyframes cardIn{
+    from{ opacity:0; transform:translateY(16px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .reveal{ animation:cardIn .6s cubic-bezier(.2,.8,.2,1) both; }
+  @media (prefers-reduced-motion:reduce){
+    .reveal{ animation:none !important; opacity:1 !important; transform:none !important; }
+    .bg-grid{ animation:none !important; }
+  }
+
+  /* ---------- copy feedback ---------- */
+  .flash{ animation:flash-border .5s ease; }
+  @keyframes flash-border{
+    0%{ border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan); }
+    100%{ border-color:var(--line); box-shadow:none; }
+  }
+
+  .toast{
+    position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(20px);
+    bottom:calc(28px + var(--fm-ext-safe-bottom, 0px));
+    background:var(--panel-2); border:1px solid var(--gold);
+    color:var(--gold);
+    font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.14em;
+    padding:10px 18px;
+    display:flex; align-items:center; gap:8px;
+    opacity:0; pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+    z-index:10;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); }
+
+  /* ---------- FM App 全屏安全区适配 ---------- */
+  :root{
+    --fm-ext-safe-top:0px;
+    --fm-ext-safe-bottom:0px;
+  }
+  html.fm-ext-fullscreen{
+    --fm-ext-safe-top: var(--fm-safe-top, 0px);
+    --fm-ext-safe-top: max(var(--fm-safe-top, 0px), env(safe-area-inset-top, 0px));
+    --fm-ext-safe-bottom: var(--fm-safe-bottom, 0px);
+    --fm-ext-safe-bottom: max(var(--fm-safe-bottom, 0px), env(safe-area-inset-bottom, 0px));
+  }
+
+
+  .file .hits, .hero-file .hits{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px; letter-spacing:.08em;
+    color:var(--slate);
+    display:inline-flex; align-items:center; gap:5px;
+  }
+  .file .hits b, .hero-file .hits b{
+    color:var(--gold); font-weight:700;
+  }
+  .file .hits::before, .hero-file .hits::before{
+    content:''; width:5px; height:5px; border-radius:50%;
+    background:var(--cyan); box-shadow:0 0 6px var(--cyan);
+    display:inline-block;
+  }
+  .hero-file .hits{
+    margin-top:10px;
+  }
+  .file .meta-row{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:auto; gap:10px;
+  }
+  .file .meta-row .arrow{ margin-top:0; align-self:center; }
+  .stats-bar{
+    margin-top:28px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:.1em; color:var(--slate);
+    display:flex; flex-wrap:wrap; gap:12px 22px; align-items:center;
+  }
+  .stats-bar span b{ color:var(--gold); font-weight:700; }
+
+  /* ---------- classified / coming soon ---------- */
+  .classified{
+    margin-top:46px;
+    border:1px dashed var(--line);
+    background:rgba(15,31,52,.55);
+    position:relative;
+    overflow:hidden;
+  }
+  .classified::before{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(135deg, transparent 0 10px, rgba(217,168,64,.03) 10px 20px);
+    pointer-events:none;
+  }
+  .classified .band{
+    background:transparent;
+    border-bottom:1px dashed var(--line);
+    color:var(--slate);
+    font-family:'JetBrains Mono', monospace; font-weight:700;
+    font-size:11px; letter-spacing:.18em;
+    padding:9px 16px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .classified .band .lock{
+    color:var(--gold-dim);
+  }
+  .classified .body{
+    padding:28px 18px 30px;
+    text-align:center;
+    position:relative;
+  }
+  .classified .status{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:.22em;
+    color:var(--cyan); margin-bottom:12px;
+  }
+  .classified .status .blink{
+    display:inline-block; width:7px; height:7px; border-radius:50%;
+    background:var(--gold); margin-right:8px; vertical-align:1px;
+    box-shadow:0 0 8px var(--gold);
+    animation:pulse 1.8s infinite;
+  }
+  .classified .msg{
+    font-family:'Oswald', 'Noto Sans SC', sans-serif;
+    font-weight:600; font-size:22px; letter-spacing:.12em;
+    color:var(--ink); text-transform:uppercase;
+  }
+  .classified .hint{
+    margin-top:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:.1em; color:var(--slate);
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    margin-top:60px; padding-top:18px; border-top:1px solid var(--line);
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.12em;
+    color:var(--slate); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+</style>
+</head>
+<body>
+
+  <canvas class="bg-canvas" id="bgCanvas"></canvas>
+  <div class="bg-grid"></div>
+  <div class="bg-vignette"></div>
+  <svg class="signal-lines" viewBox="0 0 1000 400" preserveAspectRatio="none">
+    <polyline points="0,80 60,80 90,40 140,120 180,60 230,60 260,140 320,90 320,20 400,20" fill="none" stroke="#d9a840" stroke-width="2"/>
+    <polyline points="500,200 540,140 580,180 620,110 660,150 700,90 760,140 800,80" fill="none" stroke="#d9a840" stroke-width="2"/>
+  </svg>
+  <div class="scanlines"></div>
+
+  <div class="shell">
+
+    <div class="statusbar">
+      <div><span class="dot"></span>SECURE CHANNEL // STATUS: ONLINE</div>
+      <div class="clock" id="clock">-- --</div>
+      <div>OPERATOR: <span class="id">宝宝巴士</span></div>
+    </div>
+
+    <div class="masthead">
+      <div class="eyebrow">RESTRICTED ACCESS</div>
+      <h1>Asset <em>Archive</em></h1>
+      <div class="sub">// 个人资源索引 — App 内点击直达 · 浏览器内点击复制链接</div>
+    </div>
+
+    <!-- HERO: ECLIPSE -->
+    <div class="hero-file reveal" data-url="https://vvee.ccwu.cc/" tabindex="0" role="button" style="animation-delay:0ms;">
+      <div class="band"><span>CASE FILE — 001</span><span>PRIMARY ASSET</span></div>
+      <div class="thumb" data-preview-url="https://vvee.ccwu.cc/"><div class="thumb-loader">LOADING…</div></div>
+      <div class="body">
+        <div>
+          <div class="codename">CODENAME // ECLIPSE</div>
+          <div class="name"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>Eclipse</div>
+          <div class="note"><b>钱班霓：</b> 主入口 · TV 与移动端统一前端</div>
+          <div class="hits" data-hits-for="https://vvee.ccwu.cc/">点击 <b>0</b></div>
+        </div>
+        <div class="access">
+          <div class="hatch"></div>
+          <div class="lbl" style="margin-top:10px;">ACCESS POINT</div>
+          <div class="url">vvee.ccwu.cc</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SECTION 01.5: LIVE -->
+    <div class="section-head">
+      <div class="tag">SEC. 01</div>
+      <h2>直播聚合 // Live Streams</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="hero-file reveal" data-url="https://live-a3r.pages.dev/" tabindex="0" role="button" style="animation-delay:40ms;">
+      <div class="band"><span>CASE FILE — LIVE</span><span>MULTI-SOURCE</span></div>
+      <div class="thumb" data-preview-url="https://live-a3r.pages.dev/"><div class="thumb-loader">LOADING…</div></div>
+      <div class="body">
+        <div>
+          <div class="codename">CODENAME // LIVE HUB</div>
+          <div class="name"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M5 12a7 7 0 0114 0"/><path d="M2 12a10 10 0 0120 0"/><path d="M12 15v4"/><path d="M9 19h6"/></svg>直播聚合</div>
+          <div class="note"><b>多平台：</b> 虎牙 · 斗鱼 · 抖音 · B站 · 快手 · 底部一键切换</div>
+          <div class="hits" data-hits-for="https://live-a3r.pages.dev/">点击 <b>0</b></div>
+        </div>
+        <div class="access">
+          <div class="hatch"></div>
+          <div class="lbl" style="margin-top:10px;">ACCESS POINT</div>
+          <div class="url">live-a3r.pages.dev</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 02: MOBILE -->
+    <div class="section-head">
+      <div class="tag">SEC. 02</div>
+      <h2>移动端 // Mobile Access</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="file-grid">
+      <div class="file reveal" data-url="https://nostr.aws.dpdns.org/" tabindex="0" role="button" style="animation-delay:80ms;">
+        <div class="head"><span>FILE 002-A</span><span class="num">NOSTR</span></div>
+        <div class="thumb" data-preview-url="https://nostr.aws.dpdns.org/"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><path d="M2 8.82a15 15 0 0120 0"/><path d="M5 12.86a10 10 0 0114 0"/><path d="M8.5 16.9a5 5 0 017 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>Nostr</div>
+          <div class="url">nostr.aws.dpdns.org</div>
+          <div class="note">移动端版本</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://nostr.aws.dpdns.org/">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+      <div class="file reveal" data-url="https://nostrtv.aws.dpdns.org/" tabindex="0" role="button" style="animation-delay:140ms;">
+        <div class="head"><span>FILE 002-B</span><span class="num">NOSTR TV</span></div>
+        <div class="thumb" data-preview-url="https://nostrtv.aws.dpdns.org/"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>Nostr TV</div>
+          <div class="url">nostrtv.aws.dpdns.org</div>
+          <div class="note">TV 大屏版本</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://nostrtv.aws.dpdns.org/">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 03: 玩偶聚合 -->
+    <div class="section-head">
+      <div class="tag">SEC. 03</div>
+      <h2>玩偶聚合 // Aggregator</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="file-grid">
+      <div class="file reveal" data-url="https://wo26.vivas.cc.cd" tabindex="0" role="button" style="animation-delay:200ms;">
+        <div class="head"><span>FILE 003-A</span><span class="num">WO26</span></div>
+        <div class="thumb" data-preview-url="https://wo26.vivas.cc.cd"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="7" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="17" r="1.3" fill="currentColor" stroke="none"/><circle cx="7" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="17" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>玩偶聚合 26</div>
+          <div class="url">wo26.vivas.cc.cd</div>
+          <div class="note">线路一</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://wo26.vivas.cc.cd">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+      <div class="file reveal" data-url="https://wo.vivas.cc.cd" tabindex="0" role="button" style="animation-delay:260ms;">
+        <div class="head"><span>FILE 003-B</span><span class="num">WO</span></div>
+        <div class="thumb" data-preview-url="https://wo.vivas.cc.cd"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="7" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="17" r="1.3" fill="currentColor" stroke="none"/><circle cx="7" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="17" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>玩偶聚合</div>
+          <div class="url">wo.vivas.cc.cd</div>
+          <div class="note">线路二 · 备用</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://wo.vivas.cc.cd">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 04: AUX -->
+    <div class="section-head">
+      <div class="tag">SEC. 04</div>
+      <h2>辅助资源 // Auxiliary Assets</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="file-grid">
+      <div class="file reveal" data-url="https://pomo.920410.xyz/" tabindex="0" role="button" style="animation-delay:320ms;">
+        <div class="head"><span>FILE 004-A</span><span class="num">POMO</span></div>
+        <div class="thumb" data-preview-url="https://pomo.920410.xyz/"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.6"/></svg>Pomo</div>
+          <div class="url">pomo.920410.xyz</div>
+          <div class="note">4K原盘</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://pomo.920410.xyz/">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+      <div class="file reveal" data-url="https://cyber.920410.xyz/" tabindex="0" role="button" style="animation-delay:380ms;">
+        <div class="head"><span>FILE 004-B</span><span class="num">CYBER</span></div>
+        <div class="thumb" data-preview-url="https://cyber.920410.xyz/"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>赛博</div>
+          <div class="url">cyber.920410.xyz</div>
+          <div class="note">赛博风格资源站</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://cyber.920410.xyz/">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+      <div class="file reveal" data-url="https://pl-d8z.pages.dev/" tabindex="0" role="button" style="animation-delay:440ms;">
+        <div class="head"><span>FILE 004-C</span><span class="num">PAN-LINK</span></div>
+        <div class="thumb" data-preview-url="https://pl-d8z.pages.dev/"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>盘链</div>
+          <div class="url">pl-d8z.pages.dev</div>
+          <div class="note">网盘直链聚合</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://pl-d8z.pages.dev/">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+	  
+	   <div class="file reveal" data-url="https://q-16a.pages.dev/" tabindex="0" role="button" style="animation-delay:440ms;">
+        <div class="head"><span>FILE 004-G</span><span class="num">QQ</span></div>
+        <div class="thumb" data-preview-url="https://q-16a.pages.dev/"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>QQ音乐</div>
+          <div class="url">q-16a.pages.dev</div>
+          <div class="note">QQ音乐</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://q-16a.pages.dev/">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+      <div class="file reveal" data-url="https://av-9du.pages.dev/" tabindex="0" role="button" style="animation-delay:500ms;">
+        <div class="head"><span>FILE 004-D</span><span class="num">AV</span></div>
+        <div class="thumb" data-preview-url="https://av-9du.pages.dev/"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>AV</div>
+          <div class="url">av-9du.pages.dev</div>
+          <div class="note">资源聚合</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://av-9du.pages.dev/">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+      <div class="file reveal" data-url="https://bili-1k4.pages.dev/" tabindex="0" role="button" style="animation-delay:560ms;">
+        <div class="head"><span>FILE 004-E</span><span class="num">BILI</span></div>
+        <div class="thumb" data-preview-url="https://bili-1k4.pages.dev/"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>B 站</div>
+          <div class="url">bili-1k4.pages.dev</div>
+          <div class="note">哔哩哔哩镜像</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://bili-1k4.pages.dev/">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+      <div class="file reveal" data-url="https://yt-cas.pages.dev/" tabindex="0" role="button" style="animation-delay:620ms;">
+        <div class="head"><span>FILE 004-F</span><span class="num">YT</span></div>
+        <div class="thumb" data-preview-url="https://yt-cas.pages.dev/"><div class="thumb-loader">LOADING…</div></div>
+        <div class="main">
+          <div class="title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>油管</div>
+          <div class="url">yt-cas.pages.dev</div>
+          <div class="note">YouTube 镜像</div>
+          <div class="meta-row"><div class="hits" data-hits-for="https://yt-cas.pages.dev/">点击 <b>0</b></div><div class="arrow">COPY</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 05: EMBY -->
+    <div class="section-head">
+      <div class="tag">SEC. 05</div>
+      <h2>Emby // Media Server</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="hero-file reveal" data-url="https://emby-7ks.pages.dev/" tabindex="0" role="button" style="animation-delay:680ms;">
+      <div class="band"><span>CASE FILE — EMBY</span><span>MEDIA LIBRARY</span></div>
+      <div class="thumb" data-preview-url="https://emby-7ks.pages.dev/"><div class="thumb-loader">LOADING…</div></div>
+      <div class="body">
+        <div>
+          <div class="codename">CODENAME // EMBY</div>
+          <div class="name"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/><path d="M12 18v2"/><polygon points="10 9 15 12 10 15 10 9" fill="currentColor" stroke="none"/></svg>Emby</div>
+          <div class="note"><b>媒体库：</b> Emby 前端入口 · 影视合集</div>
+          <div class="hits" data-hits-for="https://emby-7ks.pages.dev/">点击 <b>0</b></div>
+        </div>
+        <div class="access">
+          <div class="hatch"></div>
+          <div class="lbl" style="margin-top:10px;">ACCESS POINT</div>
+          <div class="url">emby-7ks.pages.dev</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-bar" id="statsBar">
+      <span>LOCAL STATS</span>
+      <span>总点击 <b id="statTotal">0</b></span>
+      <span>已记录板块 <b id="statItems">0</b></span>
+      <span style="margin-left:auto; cursor:pointer; color:var(--cyan);" id="statReset" title="清除本机统计">RESET</span>
+    </div>
+
+    <footer>
+      <div>ARCHIVE v1.0</div>
+      <div>11 ASSETS</div>
+    </footer>
+
+  </div>
+
+  <div class="toast" id="toast"><span class="dot"></span><span id="toast-text">已复制</span></div>
+
+  <script>
+    (function(){
+      const canvas = document.getElementById('bgCanvas');
+      if(!canvas || !canvas.getContext) return;
+      const ctx = canvas.getContext('2d');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const COLORS = ['217,168,64', '87,216,222'];
+      let w, h, nodes = [];
+
+      function resize(){
+        w = canvas.width = Math.floor(window.innerWidth * dpr);
+        h = canvas.height = Math.floor(window.innerHeight * dpr);
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+      }
+      function initNodes(){
+        const count = Math.min(64, Math.floor((window.innerWidth * window.innerHeight) / 24000));
+        nodes = Array.from({length: count}, () => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.18 * dpr,
+          vy: (Math.random() - 0.5) * 0.18 * dpr,
+          c: COLORS[Math.random() < 0.72 ? 0 : 1]
+        }));
+      }
+      function frame(){
+        ctx.clearRect(0, 0, w, h);
+        for(const n of nodes){
+          n.x += n.vx; n.y += n.vy;
+          if(n.x < 0 || n.x > w) n.vx *= -1;
+          if(n.y < 0 || n.y > h) n.vy *= -1;
+        }
+        const linkDist = 130 * dpr;
+        for(let i = 0; i < nodes.length; i++){
+          for(let j = i + 1; j < nodes.length; j++){
+            const a = nodes[i], b = nodes[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if(dist < linkDist){
+              ctx.strokeStyle = `rgba(${a.c},${(1 - dist/linkDist) * 0.18})`;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+        for(const n of nodes){
+          ctx.fillStyle = `rgba(${n.c},0.55)`;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 1.6 * dpr, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        if(!reduceMotion) requestAnimationFrame(frame);
+      }
+
+      resize();
+      initNodes();
+      if(reduceMotion){ frame(); }
+      else { requestAnimationFrame(frame); }
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => { resize(); initNodes(); }, 150);
+      });
+    })();
+
+    const clockEl = document.getElementById('clock');
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function tickClock(){
+      const d = new Date();
+      const date = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+      const time = pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+      clockEl.textContent = date+'  '+time;
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toast-text');
+    let toastTimer = null;
+
+    function fallbackCopy(text){
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try{ document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(ta);
+    }
+
+    function copyToClipboard(text){
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).catch(()=>fallbackCopy(text));
+      }else{
+        fallbackCopy(text);
+      }
+    }
+
+    function showToast(msg){
+      toastText.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>toast.classList.remove('show'), 1400);
+    }
+
+    /* ---- 本机点击统计（localStorage）---- */
+    const STAT_KEY = 'archive_click_stats_v1';
+    function loadStats(){
+      try{ return JSON.parse(localStorage.getItem(STAT_KEY) || '{}') || {}; }
+      catch(e){ return {}; }
+    }
+    function saveStats(s){
+      try{ localStorage.setItem(STAT_KEY, JSON.stringify(s)); }catch(e){}
+    }
+    function bumpStat(url){
+      const s = loadStats();
+      s[url] = (s[url] || 0) + 1;
+      saveStats(s);
+      return s[url];
+    }
+    function renderHits(){
+      const s = loadStats();
+      let total = 0, items = 0;
+      document.querySelectorAll('[data-hits-for]').forEach(el=>{
+        const url = el.getAttribute('data-hits-for');
+        const n = s[url] || 0;
+        const b = el.querySelector('b');
+        if(b) b.textContent = String(n);
+        if(n > 0){ total += n; items++; }
+      });
+      // also count urls not shown
+      Object.keys(s).forEach(k=>{ if(s[k]>0 && !document.querySelector('[data-hits-for="'+k+'"]')){ total += s[k]; items++; }});
+      // recalculate total cleanly
+      total = 0; items = 0;
+      Object.keys(s).forEach(k=>{ if(s[k]>0){ total += s[k]; items++; }});
+      const st = document.getElementById('statTotal');
+      const si = document.getElementById('statItems');
+      if(st) st.textContent = String(total);
+      if(si) si.textContent = String(items);
+    }
+    renderHits();
+    const resetBtn = document.getElementById('statReset');
+    if(resetBtn){
+      resetBtn.addEventListener('click', ()=>{
+        if(confirm('清除本机所有板块点击统计？')){
+          localStorage.removeItem(STAT_KEY);
+          renderHits();
+          showToast('统计已重置');
+        }
+      });
+    }
+
+    /* ---- FM / WebHome 环境检测 ---- */
+    function isInFmApp(){
+      try{
+        if(typeof window.fm !== 'undefined' && window.fm) return true;
+        if(typeof window.fongmi !== 'undefined' && window.fongmi) return true;
+        if(typeof window.fongmiBridge !== 'undefined') return true;
+      }catch(e){}
+      const ua = (navigator.userAgent || '').toLowerCase();
+      // 常见 FongMi / WebHomeTV / 影视仓 类壳 UA 特征
+      if(/fongmi|webhome|catvod|tvbox|fmapp|影视仓/.test(ua)) return true;
+      // Android WebView 且非主流浏览器
+      if(/android/.test(ua) && /; wv\)/.test(ua) && !/chrome\/[\d.]+ mobile safari/i.test(navigator.userAgent)){
+        // 保守：仅当有注入对象时才算 App，避免误判
+      }
+      return false;
+    }
+
+    function openInApp(url){
+      // App 内直接跳转（WebView 打开目标页，可用返回键 / 返回按钮回来）
+      window.location.href = url;
+    }
+
+    function updateFmUi(){
+      const inApp = isInFmApp();
+      // 卡片上的 COPY 文案在 App 内改为 GO
+      document.querySelectorAll('.file .arrow').forEach(function(el){
+        if(inApp){
+          if(el.dataset.orig !== '1'){
+            el.dataset.origText = el.textContent;
+            el.dataset.orig = '1';
+          }
+          el.textContent = 'GO';
+        } else if(el.dataset.orig === '1' && el.dataset.origText){
+          el.textContent = el.dataset.origText;
+        }
+      });
+    }
+
+    /* ---- 全屏（edge chrome）适配：隐藏原生顶部/底部 UI，页面自行用安全区变量避让 ---- */
+    function whenFm(){
+      if(window.fm) return Promise.resolve(window.fm);
+      return new Promise(function(resolve){
+        var done = false;
+        window.addEventListener('fmsdk', function(){ done = true; resolve(window.fm); }, { once:true });
+        setTimeout(function(){ if(!done && window.fm){ done = true; resolve(window.fm); } }, 3000);
+      });
+    }
+
+    function applyFmViewport(detail){
+      const mode = (detail && detail.chromeMode) || '';
+      const full = /^(edge|immersive|tv-full|tv-toolbar-hidden)$/.test(mode);
+      document.documentElement.classList.toggle('fm-ext-fullscreen', full);
+    }
+
+    function setupFmFullscreen(){
+      whenFm().then(function(fm){
+        if(fm && fm.ui && typeof fm.ui.setChrome === 'function'){
+          fm.ui.setChrome({
+            mode: 'edge',
+            statusBarStyle: 'light',
+            navigationBarStyle: 'light',
+            restoreAffordance: 'native',
+            scrim: { top: 'transparent', bottom: 'transparent' }
+          }).catch(function(){});
+        }
+        if(fm && fm.ui && typeof fm.ui.getViewport === 'function'){
+          fm.ui.getViewport().then(applyFmViewport).catch(function(){});
+        }
+      }).catch(function(){});
+      window.addEventListener('fmviewport', function(event){
+        applyFmViewport(event.detail || {});
+      });
+    }
+    setupFmFullscreen();
+
+    // SDK 可能晚于页面脚本注入，监听就绪事件并轮询一小段时间
+    window.addEventListener('fmsdk', updateFmUi);
+    updateFmUi();
+    let fmPoll = 0;
+    const fmPollTimer = setInterval(function(){
+      updateFmUi();
+      if(++fmPoll >= 20 || isInFmApp()) clearInterval(fmPollTimer);
+    }, 200);
+
+    document.querySelectorAll('[data-url]').forEach(card=>{
+      const handler = ()=>{
+        const url = card.dataset.url;
+        const n = bumpStat(url);
+        renderHits();
+        card.classList.remove('flash');
+        void card.offsetWidth;
+        card.classList.add('flash');
+
+        if(isInFmApp()){
+          showToast('正在跳转 · ' + url.replace(/^https?:\/\//,'').replace(/\/$/,''));
+          const arrow = card.querySelector('.arrow');
+          if(arrow){
+            const old = arrow.textContent;
+            arrow.textContent = 'GO…';
+            setTimeout(function(){ arrow.textContent = old; }, 800);
+          }
+          // 稍等 toast 再跳，体验更顺
+          setTimeout(function(){ openInApp(url); }, 180);
+        } else {
+          copyToClipboard(url);
+          showToast('已复制 · 本机点击 ' + n + ' // ' + url.replace(/^https?:\/\//,'').replace(/\/$/,''));
+          const arrow = card.querySelector('.arrow');
+          if(arrow){
+            const old = arrow.textContent;
+            arrow.textContent = 'COPIED';
+            setTimeout(()=>{ arrow.textContent = old; }, 1200);
+          }
+        }
+      };
+      card.addEventListener('click', handler);
+      card.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); handler(); }
+      });
+    });
+
+    /* ---- 动态 iframe 预览（参考宝宝在线）---- */
+    const IFRAME_SIZE = 720;
+    function initLivePreviews(){
+      document.querySelectorAll('.thumb[data-preview-url]').forEach(function(thumb){
+        if(thumb.querySelector('iframe')) return;
+        const url = thumb.getAttribute('data-preview-url');
+        if(!url) return;
+        const loader = thumb.querySelector('.thumb-loader');
+        const wrap = document.createElement('div');
+        wrap.className = 'iframe-wrap';
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.width = IFRAME_SIZE;
+        iframe.height = IFRAME_SIZE;
+        iframe.loading = 'lazy';
+        iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms');
+        iframe.title = 'preview';
+        let scaled = false;
+        function doScale(){
+          const pw = thumb.clientWidth;
+          const ph = thumb.clientHeight;
+          if(pw && ph){
+            const scale = Math.max(pw / IFRAME_SIZE, ph / IFRAME_SIZE);
+            iframe.style.transform = 'scale(' + scale + ')';
+            scaled = true;
+          }
+        }
+        iframe.onload = function(){
+          doScale();
+          if(loader) loader.style.display = 'none';
+        };
+        setTimeout(function(){
+          if(!scaled) doScale();
+          if(loader) loader.style.display = 'none';
+        }, 2800);
+        wrap.appendChild(iframe);
+        thumb.appendChild(wrap);
+      });
+    }
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', initLivePreviews);
+    } else {
+      initLivePreviews();
+    }
+    window.addEventListener('resize', function(){
+      document.querySelectorAll('.thumb .iframe-wrap iframe').forEach(function(iframe){
+        const thumb = iframe.closest('.thumb');
+        if(!thumb) return;
+        const pw = thumb.clientWidth, ph = thumb.clientHeight;
+        if(pw && ph){
+          const scale = Math.max(pw / IFRAME_SIZE, ph / IFRAME_SIZE);
+          iframe.style.transform = 'scale(' + scale + ')';
+        }
+      });
+    });
+  </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1ae628a2f8d44751bafeb4d676de142e","r":1}' crossorigin="anonymous"></script>

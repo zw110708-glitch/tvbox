@@ -1,0 +1,1533 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>POMO // ARCHIVE</title>
+
+<!-- ES5 兼容引导层（同 solene/pinglian 惯例，文档第一个内联脚本必须 ES5）：
+     polyfill + 特性检测 + fm-native/tv-mode 标记，供后面 fongmi/WebHome SDK 使用 -->
+<script>
+(function () {
+  "use strict";
+  var D = document, root = D.documentElement;
+  if (window.fongmiBridge || window.fm || window.fongmi) root.className += " fm-native";
+  if (window.fongmiClient && window.fongmiClient.isLeanback) root.className += " tv-mode";
+
+  if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+  if (!Element.prototype.closest) Element.prototype.closest = function (sel) {
+    var el = this; while (el && el.nodeType === 1) { if (el.matches(sel)) return el; el = el.parentNode; } return null;
+  };
+  function addRC(p) { if (p && !p.replaceChildren) p.replaceChildren = function () {
+    while (this.firstChild) this.removeChild(this.firstChild);
+    for (var i = 0; i < arguments.length; i++) this.appendChild(arguments[i]);
+  }; }
+  addRC(Element.prototype); if (typeof DocumentFragment !== "undefined") addRC(DocumentFragment.prototype);
+  if (!Array.from) Array.from = function (a) { var r = [], i, n = a ? a.length : 0; if (typeof n !== "number") n = 0; for (i = 0; i < n; i++) r.push(a[i]); return r; };
+  if (!Array.prototype.includes) Array.prototype.includes = function (v) { return this.indexOf(v) !== -1; };
+  if (window.NodeList && NodeList.prototype && !NodeList.prototype.forEach) NodeList.prototype.forEach = Array.prototype.forEach;
+  if (!String.prototype.includes) String.prototype.includes = function (s) { return this.indexOf(s) !== -1; };
+  if (!String.prototype.startsWith) String.prototype.startsWith = function (s) { return this.lastIndexOf(s, 0) === 0; };
+  if (!String.prototype.endsWith) String.prototype.endsWith = function (s) { var i = this.length - s.length; return i >= 0 && this.indexOf(s, i) === i; };
+  if (typeof Promise !== "undefined" && !Promise.prototype["finally"]) Promise.prototype["finally"] = function (cb) {
+    return this.then(function (v) { return Promise.resolve(cb()).then(function () { return v; }); },
+      function (e) { return Promise.resolve(cb()).then(function () { throw e; }); });
+  };
+})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   POMO ARCHIVE — UI 语言移植自「发布页」：档案/终端美学
+   Oswald + JetBrains Mono，深海军蓝底 + 金/青强调色，
+   扫描线 + 网格背景 + 粒子连线氛围，"CASE FILE" 卡片语法。
+   功能移植自 pinglian.html 的 pm(pomo) 网盘明链源模块。
+   ============================================================ */
+:root{
+  --bg:#060c16;
+  --panel:#0f1f34;
+  --panel-2:#142c46;
+  --line:#22405f;
+  --gold:#d9a840;
+  --gold-dim:#8a6b2c;
+  --gold-rgb:217,168,64;
+  --on-accent:var(--on-accent);
+  --cyan:#57d8de;
+  --ink:#e8edf3;
+  --slate:#5f7690;
+  --red:#b23b3b;
+  --green:#3ddc84;
+
+  --safe-top: max(var(--fm-safe-top, 0px), env(safe-area-inset-top, 0px));
+  --safe-bottom: max(var(--fm-safe-bottom, 0px), env(safe-area-inset-bottom, 0px));
+  --safe-left: max(var(--fm-safe-left, 0px), env(safe-area-inset-left, 0px));
+  --safe-right: max(var(--fm-safe-right, 0px), env(safe-area-inset-right, 0px));
+}
+/* ---------- 主题：点击左上角 logo 切换，靠覆写 --gold/--gold-dim/--gold-rgb/--cyan/--on-accent 实现全局换色 ---------- */
+html[data-theme="cyan"]{
+  --gold:#57d8de; --gold-dim:#2f7d82; --gold-rgb:87,216,222; --on-accent:#062226; --cyan:#d9a840;
+}
+html[data-theme="rose"]{
+  --gold:#e0637a; --gold-dim:#8a3546; --gold-rgb:224,99,122; --on-accent:#2a0810; --cyan:#57d8de;
+}
+html[data-theme="violet"]{
+  --gold:#9c7cf0; --gold-dim:#5b447f; --gold-rgb:156,124,240; --on-accent:#160f2e; --cyan:#57d8de;
+}
+html[data-theme="green"]{
+  --gold:#5fd88a; --gold-dim:#33804f; --gold-rgb:95,216,138; --on-accent:#062611; --cyan:#57d8de;
+}
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html{ background:var(--bg); }
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Noto Sans SC', sans-serif;
+  min-height:100vh; position:relative; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+button{ font-family:inherit; color:inherit; cursor:pointer; background:none; border:0; }
+input{ font-family:inherit; color:inherit; }
+img{ display:block; max-width:100%; }
+.hidden{ display:none !important; }
+
+/* ---------- ambient background ---------- */
+.bg-canvas{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+.bg-grid{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:64px 64px; opacity:.08;
+  animation:gridDrift 26s linear infinite;
+}
+@keyframes gridDrift{ from{ background-position:0 0,0 0; } to{ background-position:64px 64px,64px 64px; } }
+.bg-vignette{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%, rgba(var(--gold-rgb),.06), transparent 60%),
+             radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.6), transparent 70%);
+}
+.scanlines{
+  position:fixed; inset:0; z-index:2; pointer-events:none;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,.12) 0px, rgba(0,0,0,.12) 1px, transparent 2px, transparent 3px);
+  opacity:.35; mix-blend-mode:overlay;
+}
+.tv-mode .bg-canvas, .tv-mode .scanlines, .tv-mode .bg-grid{ display:none; } /* TV 端关闭低成本动效 */
+
+.scan-sweep{
+  position:fixed; left:0; right:0; top:-140px; height:140px; z-index:2; pointer-events:none;
+  background:linear-gradient(180deg, transparent, rgba(var(--gold-rgb),.05), transparent);
+  mix-blend-mode:screen; animation:sweepMove 9s linear infinite;
+}
+@keyframes sweepMove{ 0%{ top:-140px; } 100%{ top:100vh; } }
+.tv-mode .scan-sweep{ display:none; }
+@media (prefers-reduced-motion:reduce){ .scan-sweep{ display:none; } }
+
+/* ---------- 开机终端动画：进站瞬间的沉浸感 ---------- */
+.boot{
+  position:fixed; inset:0; z-index:200; background:var(--bg);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+  padding:24px calc(var(--safe-left) + 28px);
+  font-family:'JetBrains Mono', monospace; font-size:12.5px; letter-spacing:.06em; color:var(--slate);
+  transition:opacity .4s ease, visibility .4s ease;
+}
+.boot.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+.boot-line{ margin-bottom:8px; opacity:0; animation:bootIn .3s ease forwards; }
+.boot-line:nth-child(2){ animation-delay:.35s; }
+@keyframes bootIn{ from{ opacity:0; transform:translateY(4px); } to{ opacity:1; transform:translateY(0); } }
+.boot-gold{ color:var(--gold); }
+.boot-ok{ color:var(--green); }
+.boot-bar{ width:220px; max-width:60vw; height:2px; background:var(--line); margin-top:14px; overflow:hidden; }
+.boot-bar-fill{ height:100%; width:0%; background:var(--gold); animation:bootFill .75s ease forwards; animation-delay:.15s; }
+@keyframes bootFill{ to{ width:100%; } }
+
+/* ---------- 全局滚动条 / 选中色，去掉浏览器默认蓝，贴合终端配色 ---------- */
+::selection{ background:rgba(var(--gold-rgb),.35); color:var(--ink); }
+html{ scrollbar-width:thin; scrollbar-color:var(--gold-dim) var(--bg); }
+::-webkit-scrollbar{ width:9px; height:9px; }
+::-webkit-scrollbar-track{ background:var(--bg); }
+::-webkit-scrollbar-thumb{ background:var(--gold-dim); border:2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover{ background:var(--gold); }
+
+/* ---------- layout shell ---------- */
+.shell{ position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:calc(var(--safe-top) + 20px) calc(var(--safe-right) + 20px) 80px calc(var(--safe-left) + 20px); }
+@media (max-width:640px){
+  .shell{ padding-left:calc(var(--safe-left) + 10px); padding-right:calc(var(--safe-right) + 10px); }
+}
+
+.topbar{
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:nowrap; gap:14px;
+  padding-bottom:16px; margin-bottom:22px; border-bottom:1px solid var(--line);
+}
+.topbar-id{ display:flex; align-items:center; gap:9px; min-width:0; cursor:pointer; }
+.topbar-id .dot{ flex:none; display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 1.8s infinite; }
+.topbar-id .dot.off{ background:var(--red); box-shadow:0 0 8px var(--red); animation:none; }
+.topbar-id h1{ font-family:'Oswald', sans-serif; font-weight:700; font-size:clamp(18px,4.6vw,26px); letter-spacing:.01em; text-transform:uppercase; color:var(--ink); line-height:1; white-space:nowrap; }
+.topbar-id h1 em{ font-style:normal; color:var(--gold); }
+.topbar-meta{
+  display:flex; align-items:center; gap:14px; flex:none; max-width:56%;
+  overflow-x:auto; -ms-overflow-style:none; scrollbar-width:none;
+  font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.1em; color:var(--slate); white-space:nowrap;
+}
+.topbar-meta::-webkit-scrollbar{ display:none; }
+.topbar-meta .clock{ color:var(--cyan); letter-spacing:.12em; }
+.topbar-meta .id{ color:var(--gold); }
+
+@keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+/* ---------- search / filter row ---------- */
+.search-row{ display:flex; gap:10px; margin-bottom:18px; }
+.search-box{ flex:1 1 auto; display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--line); padding:0 6px 0 14px; height:44px; transition:border-color .2s ease, box-shadow .2s ease; }
+.search-box:focus-within{ border-color:var(--gold-dim); box-shadow:0 0 0 3px rgba(var(--gold-rgb),.14), 0 0 18px rgba(var(--gold-rgb),.10); }
+.search-box input{ flex:1; background:transparent; border:0; outline:0; font-size:14px; color:var(--ink); font-family:'JetBrains Mono', monospace; }
+.search-box input::placeholder{ color:var(--slate); }
+.search-box .go{ height:32px; padding:0 16px; background:var(--gold); color:var(--on-accent); font-weight:700; font-size:12px; letter-spacing:.1em; font-family:'JetBrains Mono', monospace; }
+.search-box .go:active{ background:var(--gold-dim); }
+.search-box .clear{ color:var(--slate); font-size:16px; padding:0 6px; }
+
+.chip-row{
+  display:flex; gap:2px; overflow-x:auto; -ms-overflow-style:none; scrollbar-width:none;
+  margin:10px 0 24px; padding:3px;
+  background:var(--panel); border:1px solid var(--line);
+}
+.chip-row::-webkit-scrollbar{ display:none; }
+.chip{
+  flex:none; font-family:'JetBrains Mono', monospace; font-size:11.5px; letter-spacing:.1em;
+  color:var(--slate); background:transparent; border:1px solid transparent;
+  padding:8px 16px; white-space:nowrap; transition:color .18s ease, background .18s ease, border-color .18s ease;
+}
+.chip.active{ color:var(--on-accent); background:var(--gold); border-color:var(--gold); font-weight:700; animation:chipGlow 2.6s ease-in-out infinite; }
+@keyframes chipGlow{
+  0%,100%{ box-shadow:0 0 0 0 rgba(var(--gold-rgb),0); }
+  50%{ box-shadow:0 0 10px 1px rgba(var(--gold-rgb),.45); }
+}
+@media (prefers-reduced-motion:reduce){ .chip.active{ animation:none; } }
+
+.totop{
+  position:fixed; right:calc(var(--safe-right) + 14px); bottom:calc(var(--safe-bottom) + 24px);
+  width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+  background:var(--panel); border:1px solid var(--gold-dim); color:var(--gold);
+  font-size:15px; cursor:pointer; z-index:40;
+  opacity:0; pointer-events:none; transform:translateY(10px);
+  transition:opacity .2s ease, transform .2s ease, border-color .15s ease, background .15s ease;
+}
+.totop.show{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.totop:hover, .totop:active{ border-color:var(--gold); background:var(--panel-2); }
+
+/* ---------- section label (发布页 section-head) ---------- */
+.section-head{ display:flex; align-items:baseline; gap:14px; margin:38px 0 16px; }
+.section-head .tag{ font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.2em; color:var(--bg); background:var(--gold); padding:3px 8px; font-weight:700; }
+.section-head h2{ font-family:'Oswald', sans-serif; font-weight:600; font-size:16px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); }
+.section-head .rule{ flex:1; height:1px; background:var(--line); }
+.section-head .more{ font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.1em; color:var(--slate); background:none; border:none; padding:0; cursor:pointer; }
+.section-head .more[disabled]{ opacity:.5; }
+.section-head .more:active{ color:var(--gold); }
+.icon-btn{
+  flex:none; width:30px; height:30px; display:flex; align-items:center; justify-content:center;
+  font-size:15px; line-height:1; color:var(--gold); background:var(--panel); border:1px solid var(--gold-dim);
+  cursor:pointer; transition:border-color .15s ease, background .15s ease, transform .1s ease;
+}
+.icon-btn:active{ transform:scale(.92); border-color:var(--gold); background:var(--panel-2); }
+.icon-btn[disabled]{ opacity:.5; }
+
+/* ---------- file grid / file card ---------- */
+.file-grid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; }
+@media (min-width:720px){ .file-grid{ gap:14px; grid-template-columns:repeat(auto-fill, minmax(132px,1fr)); } }
+@media (min-width:1180px){ .file-grid{ grid-template-columns:repeat(auto-fill, minmax(156px,1fr)); } }
+
+.file{
+  background:var(--panel); border:1px solid var(--line); color:inherit;
+  display:flex; flex-direction:column; cursor:pointer; position:relative;
+  transition:transform .22s cubic-bezier(.25,.8,.25,1), border-color .22s ease, background .22s ease, box-shadow .22s ease;
+}
+@media (hover:hover){
+  .file:hover{
+    transform:translateY(-3px);
+    border-color:rgba(var(--gold-rgb),.5);
+    background:var(--panel-2);
+    box-shadow:0 12px 28px rgba(0,0,0,.4), 0 0 0 1px rgba(var(--gold-rgb),.16), 0 0 20px -4px rgba(var(--gold-rgb),.28);
+    z-index:2;
+  }
+}
+.file:focus-visible{ outline:none; border-color:var(--gold); box-shadow:0 0 0 2px rgba(var(--gold-rgb),.4); }
+.file::after{
+  content:''; position:absolute; inset:-1px; pointer-events:none; opacity:0; transition:opacity .2s ease;
+  background:
+    linear-gradient(var(--gold), var(--gold)) top left / 12px 2px no-repeat,
+    linear-gradient(var(--gold), var(--gold)) top left / 2px 12px no-repeat,
+    linear-gradient(var(--gold), var(--gold)) top right / 12px 2px no-repeat,
+    linear-gradient(var(--gold), var(--gold)) top right / 2px 12px no-repeat,
+    linear-gradient(var(--gold), var(--gold)) bottom left / 12px 2px no-repeat,
+    linear-gradient(var(--gold), var(--gold)) bottom left / 2px 12px no-repeat,
+    linear-gradient(var(--gold), var(--gold)) bottom right / 12px 2px no-repeat,
+    linear-gradient(var(--gold), var(--gold)) bottom right / 2px 12px no-repeat;
+}
+@media (hover:hover){ .file:hover::after{ opacity:1; } }
+.file:focus-visible::after{ opacity:1; }
+.file .thumb{ position:relative; width:100%; aspect-ratio:2/3; overflow:hidden; background:var(--panel-2); flex:none; }
+.file .thumb:not(.loaded){
+  background:linear-gradient(105deg, rgba(255,255,255,.03) 0%, rgba(255,255,255,.03) 38%, rgba(var(--gold-rgb),.12) 50%, rgba(255,255,255,.03) 62%, rgba(255,255,255,.03) 100%);
+  background-size:200% 100%; animation:fileShimmer 1.6s ease-in-out infinite;
+}
+@keyframes fileShimmer{ 0%{ background-position:-200% 0; } 100%{ background-position:200% 0; } }
+.file .thumb img{ width:100%; height:100%; object-fit:cover; object-position:top; display:block; filter:saturate(.92) brightness(.92) contrast(1.04); opacity:0; transition:opacity .35s ease, transform .35s ease; }
+.file .thumb img.on{ opacity:1; }
+.file .thumb::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(6,12,22,0) 55%, rgba(6,12,22,.6) 100%); pointer-events:none; }
+@media (hover:hover){ .file:hover .thumb img{ transform:scale(1.05); filter:saturate(1) brightness(.98) contrast(1.04); } }
+.file .thumb .ph{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Oswald',sans-serif; font-size:11.5px; color:var(--slate); text-align:center; padding:8px; }
+.file .thumb .tag{ position:absolute; top:6px; left:6px; background:rgba(6,12,22,.72); backdrop-filter:blur(2px); color:var(--gold); font-family:'JetBrains Mono', monospace; font-size:9px; letter-spacing:.08em; padding:2px 6px; border:1px solid var(--gold-dim); pointer-events:none; }
+.file .main{ padding:8px 9px 9px; flex:1; display:flex; flex-direction:column; gap:3px; }
+.file .title{ font-family:'Oswald', sans-serif; font-weight:600; font-size:12.5px; letter-spacing:.01em; color:var(--ink); line-height:1.25; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; transition:color .2s ease; }
+@media (hover:hover){ .file:hover .title{ color:var(--gold); } }
+
+
+/* ---------- hero-file (detail overlay header) ---------- */
+.hero-file{ position:relative; background:linear-gradient(180deg, var(--panel) 0%, #0b1728 100%); border:1px solid var(--line); overflow:hidden; }
+.hero-file .band{ background:var(--gold); color:var(--on-accent); font-family:'JetBrains Mono', monospace; font-weight:700; font-size:11.5px; letter-spacing:.16em; padding:6px 16px; display:flex; justify-content:space-between; box-shadow:0 2px 12px rgba(var(--gold-rgb),.22); }
+.hero-file .thumb{ position:relative; width:100%; height:clamp(480px, 138vw, 680px); overflow:hidden; background:var(--panel-2); }
+.hero-file .thumb img{ width:100%; height:100%; object-fit:cover; object-position:top; filter:saturate(.9) brightness(.85) contrast(1.04); opacity:0; transform:scale(1.03); transition:opacity .5s ease, transform .5s ease; }
+.hero-file .thumb img.on{ opacity:1; transform:scale(1); }
+.hero-file .thumb::before{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(6,12,22,.5) 0%, rgba(6,12,22,0) 22%); pointer-events:none; z-index:1; }
+.hero-file .thumb::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(6,12,22,0) 38%, rgba(6,12,22,.5) 62%, rgba(6,12,22,.94) 88%, var(--panel) 100%); pointer-events:none; }
+.hero-file .body{ padding:0 20px 22px; position:relative; margin-top:-118px; z-index:1; }
+.hero-file .codename{ font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.2em; color:var(--slate); margin-bottom:6px; text-shadow:0 1px 8px rgba(0,0,0,.6); }
+.hero-file .name{ font-family:'Oswald', sans-serif; font-weight:700; font-size:clamp(24px,6vw,36px); letter-spacing:.01em; color:var(--ink); text-transform:uppercase; line-height:1.08; text-shadow:0 2px 18px rgba(0,0,0,.65), 0 1px 4px rgba(0,0,0,.5); }
+.hero-file .note{ font-size:13px; color:var(--slate); margin-top:12px; line-height:1.6; max-height:6.4em; overflow:hidden; text-shadow:0 1px 6px rgba(0,0,0,.4); }
+/* 横版海报（剧照/banner）自动识别：矮而宽，居中裁切，叠压幅度收窄 */
+.hero-file.landscape .thumb{ height:clamp(200px, 58vw, 400px); }
+.hero-file.landscape .thumb img{ object-position:center; }
+.hero-file.landscape .body{ margin-top:-64px; }
+.hero-file.landscape .thumb::after{ background:linear-gradient(180deg, rgba(6,12,22,0) 30%, rgba(6,12,22,.55) 60%, rgba(6,12,22,.94) 84%, var(--panel) 100%); }
+
+/* ---------- back bar ---------- */
+.back-bar{ display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.1em; color:var(--slate); margin-bottom:10px; cursor:pointer; }
+.back-bar:active{ color:var(--gold); }
+
+/* ---------- resource tabs + rows ---------- */
+.restabs{ display:flex; gap:8px; overflow-x:auto; margin:18px 0 12px; -ms-overflow-style:none; scrollbar-width:none; }
+.restabs::-webkit-scrollbar{ display:none; }
+.restab{ flex:none; font-family:'JetBrains Mono', monospace; font-size:11.5px; letter-spacing:.08em; color:var(--slate); background:var(--panel); border:1px solid var(--line); padding:7px 14px; }
+.restab.active{ color:var(--on-accent); background:var(--gold); border-color:var(--gold); font-weight:700; }
+
+.res-list{ display:flex; flex-direction:column; gap:8px; }
+.res-row{ display:flex; align-items:center; gap:12px; background:var(--panel); border:1px solid var(--line); padding:12px 14px; cursor:pointer; transition:border-color .15s ease, background .15s ease; }
+.res-row:hover, .res-row:focus-visible{ border-color:var(--gold-dim); background:var(--panel-2); outline:none; }
+.res-dot{ flex:none; width:8px; height:8px; border-radius:50%; background:var(--slate); }
+.res-dot.checking{ background:var(--cyan); animation:pulse 1s infinite; }
+.res-dot.ok{ background:var(--green); }
+.res-dot.bad{ background:var(--red); }
+.res-badge{ flex:none; font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:700; letter-spacing:.08em; color:var(--gold); border:1px solid var(--gold-dim); padding:3px 8px; min-width:44px; text-align:center; }
+.res-main{ flex:1 1 auto; min-width:0; }
+.res-title{ font-size:13.5px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.res-sub{ font-family:'JetBrains Mono', monospace; font-size:10.5px; color:var(--slate); margin-top:2px; }
+.res-action{ flex:none; font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.1em; color:var(--slate); }
+.res-row:hover .res-action{ color:var(--gold); }
+
+.empty-note{ font-family:'JetBrains Mono', monospace; font-size:12.5px; color:var(--slate); padding:26px 4px; text-align:center; letter-spacing:.06em; }
+
+/* ---------- load more / pager ---------- */
+.load-more{
+  display:block; width:100%; margin-top:22px; padding:14px; text-align:center;
+  background:transparent; border:1px dashed var(--line);
+  font-family:'JetBrains Mono', monospace; font-size:11.5px; letter-spacing:.14em; color:var(--slate);
+  transition:border-color .2s ease, color .2s ease;
+}
+.load-more:active{ border-color:var(--gold-dim); color:var(--gold); }
+.load-more[disabled]{ opacity:.55; }
+
+/* ---------- entrance + feedback ---------- */
+@keyframes cardIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
+.reveal{ animation:cardIn .5s cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion:reduce){ .reveal{ animation:none !important; opacity:1 !important; transform:none !important; } .bg-grid{ animation:none !important; } }
+.flash{ animation:flash-border .5s ease; }
+@keyframes flash-border{ 0%{ border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan);} 100%{ border-color:var(--line); box-shadow:none;} }
+
+.toast{ position:fixed; left:50%; bottom:calc(var(--safe-bottom) + 24px); transform:translateX(-50%) translateY(20px); background:var(--panel-2); border:1px solid var(--gold); color:var(--gold); font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.12em; padding:10px 18px; display:flex; align-items:center; gap:8px; opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; z-index:50; max-width:calc(100% - 40px); }
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+.toast .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); flex:none; }
+
+/* ---------- 设置弹窗：统一风格替代原生 prompt ---------- */
+.modal-mask{
+  position:fixed; inset:0; z-index:80; display:none; align-items:flex-end; justify-content:center;
+  background:rgba(6,12,22,.72); backdrop-filter:blur(3px); padding:0;
+}
+.modal-mask.show{ display:flex; }
+@media (min-width:640px){ .modal-mask{ align-items:center; padding:20px; } }
+.modal-panel{
+  width:100%; max-width:460px; max-height:88vh; overflow-y:auto;
+  background:var(--panel); border:1px solid var(--line); border-top:2px solid var(--gold);
+  padding:22px 18px calc(22px + var(--safe-bottom));
+  animation:modalUp .22s ease;
+}
+@media (min-width:640px){ .modal-panel{ border-top:1px solid var(--line); border-left:2px solid var(--gold); } }
+@keyframes modalUp{ from{ transform:translateY(16px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
+.modal-head{ display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+.modal-head .tag{ font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.2em; background:var(--gold); color:var(--on-accent); padding:3px 8px; font-weight:700; }
+.modal-head h3{ font-family:'Oswald', sans-serif; font-weight:600; font-size:16px; letter-spacing:.06em; color:var(--ink); text-transform:uppercase; }
+.modal-label{ display:block; font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.08em; color:var(--slate); margin:18px 0 8px; }
+.modal-label .hint{ opacity:.65; font-size:10px; }
+.modal-input{
+  width:100%; height:42px; padding:0 12px; background:var(--panel-2); border:1px solid var(--line);
+  color:var(--ink); font-family:'JetBrains Mono', monospace; font-size:13px; transition:border-color .2s ease, box-shadow .2s ease;
+}
+.modal-input:focus{ outline:none; border-color:var(--gold-dim); box-shadow:0 0 0 3px rgba(var(--gold-rgb),.14); }
+.modal-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+.modal-chip{
+  font-family:'JetBrains Mono', monospace; font-size:11.5px; letter-spacing:.06em; color:var(--slate);
+  background:var(--panel-2); border:1px solid var(--line); padding:7px 13px; cursor:pointer; transition:all .15s ease;
+}
+.modal-chip.active{ color:var(--on-accent); background:var(--gold); border-color:var(--gold); font-weight:700; }
+.modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:24px; }
+.modal-btn{ font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.1em; padding:11px 22px; background:var(--gold); color:var(--on-accent); border:1px solid var(--gold); font-weight:700; cursor:pointer; }
+.modal-btn.ghost{ background:transparent; color:var(--slate); border-color:var(--line); font-weight:400; }
+
+footer{ margin-top:56px; padding-top:16px; border-top:1px solid var(--line); font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.12em; color:var(--slate); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+
+/* ---------- overlay views ---------- */
+.view{ display:none; }
+.view.active{ display:block; }
+
+/* TV: 大焦点、更大点击目标，去掉悬停位移 */
+.tv-mode .file:hover{ transform:none; }
+.tv-mode .file:focus{ border-color:var(--gold); box-shadow:0 0 0 2px var(--gold); }
+.tv-mode .res-row:focus{ border-color:var(--gold); box-shadow:0 0 0 2px var(--gold); }
+.tv-mode .chip:focus, .tv-mode .restab:focus{ box-shadow:0 0 0 2px var(--gold); }
+</style>
+</head>
+<body>
+
+  <canvas class="bg-canvas" id="bgCanvas"></canvas>
+  <div class="bg-grid"></div>
+  <div class="bg-vignette"></div>
+  <div class="scanlines"></div>
+  <div class="scan-sweep"></div>
+
+  <div class="boot" id="bootScreen">
+    <div class="boot-line">&gt; LINKING <span class="boot-gold">POMO.MOM</span> ARCHIVE NODE…</div>
+    <div class="boot-line">&gt; AUTH <span class="boot-ok">OK</span> — ACCESS GRANTED</div>
+    <div class="boot-bar"><div class="boot-bar-fill"></div></div>
+  </div>
+
+  <div class="shell">
+
+    <div class="topbar">
+      <div class="topbar-id" id="titleTap"><span class="dot" id="connDot"></span><h1>Pomo <em>Vault</em></h1></div>
+      <div class="topbar-meta">
+        <span id="connText">CONNECTING</span>
+        <span class="clock" id="clock">-- --</span>
+        <span>NODE:<span class="id" id="baseLabel">pomo.mom</span></span>
+      </div>
+    </div>
+
+    <!-- ============ HOME VIEW ============ -->
+    <div id="viewHome" class="view active">
+
+      <div class="search-row">
+        <div class="search-box">
+          <input id="searchInput" type="search" placeholder="搜索片名…" enterkeyhint="search">
+          <button class="clear hidden" id="searchClear">✕</button>
+          <button class="go" id="searchGo">SEARCH</button>
+        </div>
+      </div>
+
+      <div class="chip-row" id="catChips"></div>
+
+      <div class="file-grid" id="homeGrid"></div>
+      <button class="load-more" id="homeMore">滑动加载更多</button>
+
+      <footer>
+        <div>POMO ARCHIVE v1.0</div>
+        <div id="footStat">STANDBY</div>
+      </footer>
+    </div>
+
+    <!-- ============ BROWSE VIEW（分类 / 搜索结果） ============ -->
+    <div id="viewBrowse" class="view">
+      <div class="back-bar" id="browseBack">‹ BACK TO INDEX</div>
+      <div class="section-head">
+        <div class="tag" id="browseTag">SEC.</div>
+        <h2 id="browseTitle">分类</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="file-grid" id="browseGrid"></div>
+      <button class="load-more" id="browseMore">滑动加载更多</button>
+    </div>
+
+    <!-- ============ DETAIL VIEW ============ -->
+    <div id="viewDetail" class="view">
+      <div class="back-bar" id="detailBack">‹ BACK</div>
+      <div class="hero-file reveal" id="heroFile">
+        <div class="band"><span id="heroCase">CASE FILE — 000</span><span>POMO SOURCE</span></div>
+        <div class="thumb"><img id="heroImg" alt=""></div>
+        <div class="body">
+          <div class="codename" id="heroCodename">ASSET ID // —</div>
+          <div class="name" id="heroName">—</div>
+          <div class="note" id="heroNote"></div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <div class="tag">SEC. 02</div>
+        <h2>Netdisk Links</h2>
+        <div class="rule"></div>
+        <button class="icon-btn" id="panSouBtn" type="button" aria-label="盘搜" title="盘搜">⌕</button>
+      </div>
+      <div class="restabs" id="resTabs"></div>
+      <div class="res-list" id="resList"><div class="empty-note">正在检索网盘资源…</div></div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"><span class="dot"></span><span id="toastText">已复制</span></div>
+  <button class="totop" id="toTopBtn" type="button" aria-label="回到顶部">▲</button>
+
+  <div class="modal-mask" id="settingsMask">
+    <div class="modal-panel" id="settingsPanel">
+      <div class="modal-head"><span class="tag">SETTINGS</span><h3>数据源设置</h3></div>
+
+      <label class="modal-label" for="stDomain">Pomo 镜像域名 <span class="hint">留空恢复默认</span></label>
+      <input class="modal-input" id="stDomain" type="text" placeholder="https://pomo.mom" autocomplete="off" spellcheck="false">
+
+      <label class="modal-label" for="stPanApi">盘搜（PanSou）接口地址 <span class="hint">留空恢复默认</span></label>
+      <input class="modal-input" id="stPanApi" type="text" placeholder="https://so.252035.xyz" autocomplete="off" spellcheck="false">
+
+      <label class="modal-label">盘搜网盘类型 <span class="hint">全不选则默认搜索全部</span></label>
+      <div class="modal-chips" id="stPanTypes"></div>
+
+      <div class="modal-actions">
+        <button class="modal-btn ghost" id="stCancel" type="button">取消</button>
+        <button class="modal-btn" id="stSave" type="button">保存</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+"use strict";
+/* ============================================================
+   业务代码。通过 fm SDK 工作：fm.req 取数据、fm.pan.play 推送播放、
+   fm.pan.check 检网盘有效性。无 SDK 时（浏览器预览）自动退化为
+   fetch + 复制链接，逻辑与 pinglian.html 里的 pm(pomo) 源模块一致。
+   ============================================================ */
+
+/* ---------- 站点定义（原样移植自 pinglian.html 的 WO_SITES.pm） ---------- */
+var PM = {
+  name: "pomo",
+  domains: ["https://pomo.mom", "https://pomo.920410.xyz"],
+  categoryUrl: function (cat, page) {                      // 首页无后缀，翻页加 /page/N
+    var base = cat ? ("/" + cat) : "";
+    return page > 1 ? [base + "/page/" + page] : [base + "/", base || "/"];
+  },
+  searchUrls: ["/?keyword={kw}"],
+  cats: [["", "最新"], ["huayurm", "华语热门"], ["jiating", "家庭影院"],
+         ["donghuadadiany", "动画电影"], ["lengmenjiapian", "冷门佳片"],
+         ["paihangbang", "TOP250"], ["dianshiju", "电视剧"]]
+};
+var PM_UA = "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36";
+/* 网盘明链正则：整页/整段扫出各家网盘直链 */
+var PAN_RE = /https?:\/\/(?:[\w.-]*\.)?(?:pan\.baidu\.com|pan\.quark\.cn|drive\.uc\.cn|fast\.uc\.cn|aliyundrive\.com|alipan\.com|aliyunpan\.com|cloud\.189\.cn|115\.com|115cdn\.[a-z0-9]+|123[a-z0-9]*\.(?:com|cn|net)|caiyun\.139\.com|yun\.139\.com|pan\.xunlei\.com|mypikpak\.com|guangyapan\.com)\/[A-Za-z0-9\-_/?=&%.#~+]*/gi;
+var MAG_RE = /magnet:\?xt=urn:btih:[A-Za-z0-9]{32,40}[^"'\s<>]*/gi;
+/* “别的片子”区块名（相关推荐/侧栏/页脚等），整词匹配 */
+var OTHER_BLOCK_RE = /(?:^|[-_])(?:related|relates|relate|recommend|recommends|recommended|guess|guesslike|tuijian|xgvod|sidebar|footer|comment|comments)(?:$|[-_])/i;
+
+var HOSTMAP = [
+  [/pan\.quark\.cn/, "quark"], [/drive\.uc\.cn|fast\.uc\.cn/, "uc"],
+  [/alipan\.com|aliyundrive\.com/, "aliyun"], [/pan\.baidu\.com|yun\.baidu\.com/, "baidu"],
+  [/cloud\.189\.cn/, "tianyi"], [/pan\.xunlei\.com/, "xunlei"],
+  [/115\.com|115cdn\.com|anxia\.com/, "115"], [/123[0-9a-z]*\.com|123pan\.cn/, "123"],
+  [/caiyun\.139\.com|yun\.139\.com|caiyun\.feixin\.10086\.cn/, "mobile"]
+];
+var PAN_META = {
+  quark:{label:"夸克",play:"quark"}, baidu:{label:"百度",play:"baidu"}, xunlei:{label:"迅雷",play:"xunlei"},
+  uc:{label:"UC",play:"uc"}, aliyun:{label:"阿里",play:"aliyun"}, "123":{label:"123",play:"123"},
+  "115":{label:"115",play:"115"}, tianyi:{label:"天翼",play:"tianyi"}, mobile:{label:"移动云",play:"mobile"},
+  guangya:{label:"光鸭盘",play:"http"}, magnet:{label:"磁力",play:"magnet"}, http:{label:"网盘",play:""}
+};
+var PAN_GROUP_ORDER = ["夸克","百度","123","UC","115","迅雷","阿里","天翼","移动云","光鸭盘","磁力","网盘"];
+var CHECKABLE = ["quark","aliyun","baidu","uc","tianyi","xunlei","123","115","mobile"];
+
+var IS_NATIVE = !!(window.fongmiBridge || window.fm || window.fongmi);
+var CLIENT = window.fongmiClient || {};
+var IS_TV = !!CLIENT.isLeanback || document.documentElement.classList.contains("tv-mode");
+
+var state = {
+  sdkReady: false, goodDomain: "", badDomains: {}, driveCheck: true,
+  view: "home", cat: "", page: 1, source: [], noMore: false, loading: false,
+  mode: "cat", kw: "", reqToken: 0,
+  currentDetail: null, panItems: [], panToken: 0, qFilter: null, qGroups: [],
+  homeCat: "", homePage: 1, homeSource: [], homeNoMore: false, homeLoading: false, homeReqToken: 0
+};
+
+/* ---------- fm 桥接就绪 ---------- */
+function fmReady() {
+  return new Promise(function (resolve) {
+    if (window.fm) return resolve(window.fm);
+    if (!IS_NATIVE) return resolve(null);
+    var done = false;
+    function ok() { if (done) return; done = true; resolve(window.fm || null); }
+    window.addEventListener("fmsdk", ok);
+    var t = 0, iv = setInterval(function () { t += 60; if (window.fm || t > 4000) { clearInterval(iv); ok(); } }, 60);
+  });
+}
+fmReady().then(function (fm) { state.sdkReady = !!fm; });
+
+var Store = {
+  get: function (k) { return fmReady().then(function (fm) {
+    if (fm && fm.cache) return fm.cache.get(k, "pomo");
+    try { return localStorage.getItem("pomo_" + k) || ""; } catch (e) { return ""; }
+  }).catch(function () { return ""; }); },
+  set: function (k, v) { return fmReady().then(function (fm) {
+    if (fm && fm.cache) return fm.cache.set(k, v, "pomo");
+    try { localStorage.setItem("pomo_" + k, v); } catch (e) {} return {};
+  }).catch(function () { return {}; }); }
+};
+
+function $(sel, root) { return (root || document).querySelector(sel); }
+function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function trimSlash(s) { return (s || "").replace(/\/+$/, ""); }
+
+function fetchTimeout(url, opts, ms) {
+  opts = opts || {};
+  var ctrl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+  var timer = ctrl && setTimeout(function () { ctrl.abort(); }, ms || 15000);
+  var o = { method: opts.method || "GET", headers: opts.headers || {} };
+  if (ctrl) o.signal = ctrl.signal;
+  return fetch(url, o).then(function (r) { if (timer) clearTimeout(timer); return r; },
+    function (e) { if (timer) clearTimeout(timer); throw e; });
+}
+
+var toastTimer = null;
+function toast(msg) { var t = $("#toast"); $("#toastText").textContent = msg; t.classList.add("show"); if (toastTimer) clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200); }
+function fallbackCopy(text) {
+  try {
+    var ta = el("textarea"); ta.value = text; ta.style.cssText = "position:fixed;opacity:0;"; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy"); document.body.removeChild(ta); toast("已复制链接");
+  } catch (e) { toast("复制失败，请手动选择"); }
+}
+function copyText(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(function () { toast("已复制链接"); }, function () { fallbackCopy(text); });
+  } else fallbackCopy(text);
+}
+
+/* ---------- 多域名请求（原样移植自 woHttpPathRaw / woHttpPath） ---------- */
+function pmBase() { return trimSlash(state.goodDomain || PM.domains[0]); }
+function pmDomains() {
+  var cur = pmBase(), list = [cur];
+  PM.domains.forEach(function (d) { if (trimSlash(d) !== cur) list.push(trimSlash(d)); });
+  return list;
+}
+var BAD_TTL = 90 * 1000;
+function domBad(d) { var t = state.badDomains[d]; return !!(t && (Date.now() - t) < BAD_TTL); }
+function markBad(d) { state.badDomains[d] = Date.now(); }
+function clearBad(d) { delete state.badDomains[d]; }
+
+function httpPathRaw(path) {
+  var all = pmDomains();
+  var live = all.filter(function (d) { return !domBad(d); });
+  var domains = live.length ? live : all;
+  function tryOne(i) {
+    if (i >= domains.length) return Promise.reject(new Error("all domains failed"));
+    var dom = domains[i], url = dom + path, req;
+    if (state.sdkReady && window.fm && fm.req) {
+      req = fm.req(url, { method: "GET", responseType: "text", timeout: 15, credentials: "include",
+                          headers: { "User-Agent": PM_UA, "Referer": dom + "/" } })
+        .then(function (r) { if (!r.ok) { var e = new Error("HTTP " + r.status); e.alive = true; throw e; } return r.body; });
+    } else {
+      req = fetchTimeout(url, { headers: {} }, 15000).then(function (r) { if (!r.ok) { var e = new Error("HTTP " + r.status); e.alive = true; throw e; } return r.text(); });
+    }
+    return req.then(function (html) {
+      if (!html || html.length < 300) { var e = new Error("empty"); e.alive = true; throw e; }
+      state.goodDomain = dom; clearBad(dom);
+      setConn(true, dom);
+      return { html: html, base: dom };
+    }, function (e) {
+      if (!(e && e.alive)) markBad(dom);
+      return tryOne(i + 1);
+    });
+  }
+  return tryOne(0);
+}
+var _memo = {}, _memoTtl = 3 * 60 * 1000;
+function httpPath(path) {
+  var hit = _memo[path];
+  if (hit && (Date.now() - hit.ts) < _memoTtl) return hit.p;
+  var p = httpPathRaw(path).then(function (r) { hit && (hit.ts = Date.now()); return r; });
+  _memo[path] = { p: p, ts: Date.now() };
+  return p;
+}
+function httpAbs(absUrl) {
+  if (state.sdkReady && window.fm && fm.req) {
+    return fm.req(absUrl, { method: "GET", responseType: "text", timeout: 15, headers: { "User-Agent": PM_UA, "Referer": absUrl } })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.body; });
+  }
+  return fetchTimeout(absUrl, { headers: {} }, 15000).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); });
+}
+
+function setConn(ok, dom) {
+  var d = $("#connDot"), t = $("#connText");
+  if (ok) { d.classList.remove("off"); t.textContent = "ONLINE"; $("#baseLabel").textContent = (dom || pmBase()).replace(/^https?:\/\//, ""); }
+  else { d.classList.add("off"); t.textContent = "UNREACHABLE"; }
+}
+
+/* ---------- 解析：净化标题 / 判空简介 ---------- */
+function sanitizeSiteTitle(t) {
+  t = String(t || "");
+  t = t.replace(/^\s*(?:立刻播放|立即播放|立刻观看|立即观看|在线播放|在线观看|免费观看|免费播放|高清观看|点击播放|极速播放|手机观看)\s*/g, "");
+  t = t.replace(/(立即播放|立刻播放|立即观看|立刻观看|在线播放|在线观看|高清观看|免费观看|免费播放|极速播放|手机观看|点击播放|迅雷下载|BT下载|磁力下载|全集观看|全集播放|详情介绍|剧情介绍|完整版在线|高清在线|_高清|—高清).*$/g, "");
+  var mm = t.match(/《([^》]{1,40})》/); if (mm) t = mm[1];
+  return t.replace(/\s+/g, " ").trim();
+}
+function isJunkOverview(t) {
+  t = String(t || "").trim();
+  if (!t) return true;
+  if (/点击(获取|播放|观看|下载)|扫码|关注|公众号|提供修复|资源\+|磁力链接|networkdisk|获取\d?K?资源|群|加入我们|更多资源|在线播放|立即观看/i.test(t)) return true;
+  return false;
+}
+function normTitleKey(t) {
+  var s = sanitizeSiteTitle(String(t || ""));
+  s = s.replace(/[（(]\s*(?:19|20)\d{2}\s*[)）]/g, "").replace(/(?:19|20)\d{2}/g, "");
+  s = s.replace(/第\s*[0-9〇一二两三四五六七八九十百]+\s*[季部]/g, "");
+  return s.replace(/[\s《》「」【】\[\]()（）·:：\-—_.]/g, "").toLowerCase();
+}
+function cleanPanRowTitle(t) {
+  var orig = String(t || "").trim(); if (!orig) return orig;
+  var mk = orig.match(/[《【]([^》】]{1,40})[》】]/);
+  if (mk && mk[1].trim()) return mk[1].trim();
+  var s = orig.replace(/^\s*(?:复制|点击复制|一键复制|获取)\s*/, "").replace(/\s*(?:下载地址|地址|下载链接|链接|下载)\s*$/, "").trim();
+  return s || orig;
+}
+function normPanUrl(u) {
+  u = u || "";
+  var mg = u.match(/btih:([A-Za-z0-9]+)/i);
+  if (mg) return "magnet:" + mg[1].toLowerCase();
+  return u.split("?")[0].replace(/\/+$/, "");
+}
+function diskType(u) {
+  if (/^magnet:/i.test(u)) return "magnet";
+  for (var i = 0; i < HOSTMAP.length; i++) if (HOSTMAP[i][0].test(u)) return HOSTMAP[i][1];
+  if (/guangyapan\.com/i.test(u)) return "guangya";
+  if (/^https?:/i.test(u)) return "http";
+  return "";
+}
+
+/* ---------- 盘搜 PanSou（移植自 index.html，详情页「盘搜」按钮 + 自动静默补充） ---------- */
+var config = { panApi: "" };                          // 留空则用下面的默认地址；可长按“盘搜”按钮自定义
+var PANSOU_DEFAULT_API = "https://so.252035.xyz";
+var PANSOU_TYPES = CHECKABLE.slice();                                  // 请求给 PanSou 的网盘类型
+var PANSOU_KEEP = PANSOU_TYPES.concat(["guangya"]);                    // 客户端保留的类型：比请求多一个光鸭盘
+var EDITION_TAIL_RE = /(数码修复版?|数字修复版?|数码修复|数字修复|修复版?|重制版?|重置版?|国配版?|中配版?|港版|台版|美版|日版|内地版?|大陆版?|完全版?|完整版?|特别版?|纪念版?|典藏版?|珍藏版?|收藏版?|导演剪辑版?|导演版?|剧场版?|无删减版?|未删减版?|加长版?|双语版?|国语版?|粤语版?|中字版?|高清版?|超清版?|清晰版?|无水印版?|重映版?|重映|洗版|版)$/;
+function yearOf(t) { var m = String(t || "").match(/(19|20)\d{2}/); return m ? m[0] : ""; }
+function cleanTitleLight(t) {
+  // 跟 cleanTitle 类似，但保留年份和"第X季"——很多资源标题本身就带年份/季号，
+  // 完全清洗掉反而搜不到"xxx2026"、"xxx 第2季"这类资源，所以单独留一份轻量清洗版做候选词。
+  t = String(t || "");
+  t = t.replace(/4K|2160P|1080P|蓝光原盘|蓝光|原盘|REMUX|HDR10?\+?|杜比视界|DV|WEB-?DL|WEB|内封|国粤双语|中英双语|国语|粤语|双语|中字|高清|超清|合集/gi, " ");
+  return t.replace(/\s+/g, " ").trim();
+}
+function cleanTitle(t) {
+  t = String(t || "");
+  t = t.replace(/[（(]\s*(?:臻彩|真彩|甄彩|臻藏|收藏|珍藏|典藏|完整|全集|完结|会员|VIP|抢先|independent|[0-9]{1,3}集?)\s*[)）]/gi, " ");
+  t = t.replace(/【[^】]*】/g, " ");
+  t = t.replace(/\[[^\]]*\]/g, " ");
+  t = t.replace(/[（(][^（）()]{0,20}(?:版|4K|2160P|1080P|蓝光|原盘|HDR|DV|双语|中字|国语|粤语|高码|臻彩|真彩)[^（）()]{0,20}[)）]/gi, " ");
+  t = t.replace(/[（(]\s*\d{4}\s*[)）]/g, " ");
+  t = t.replace(/(^|[^0-9])(19|20)\d{2}(?!\d)/g, "$1 ");
+  t = t.replace(/第\s*[0-9〇一二两三四五六七八九十百]+\s*[季部]/g, " ");
+  t = t.replace(/\bseason\s*\d+\b/gi, " ");
+  t = t.replace(/\bS\d{1,2}(?:E\d{1,3})?\b/gi, " ");
+  t = t.replace(/4K|8K|2160P|1440P|1080P|720P|UHD|蓝光原盘|蓝光|原盘|REMUX|BDRip|BluRay|HDR10?\+?|杜比视界|杜比|DoVi|DV|HQ|高码率?|高码|H\.?26[45]|x26[45]|AAC|DTS|Atmos|WEB-?DL|WEBRip|WEB|HDTV|内封|内嵌|外挂|国粤双语|中英双语|中英|国英|国语|粤语|英语|日语|韩语|双语|中字|简中|繁中|简繁|字幕|无水印|去水印|纯净版?|收藏版?|珍藏版?|完整版?|未删减|加长版?|导演剪辑版?|剧场版|高清|超清|流畅|臻彩|真彩|甄彩|合集|全集|完结|更新至?|第?\d{1,4}集/gi, " ");
+  t = t.replace(/\d+(?:\.\d+)?\s*[GMT]B?\b/gi, " ");
+  t = t.replace(/\bE\d{1,3}\b/gi, " ");
+  t = t.replace(/\bEP\d{1,3}\b/gi, " ");
+  t = t.replace(/\b(?:CHS|CHT|ENG|JPN|KOR|GB|BIG5|简|繁)\b/gi, " ");
+  t = t.replace(/60FPS|30FPS|MAX/gi, " ");
+  t = t.replace(/(^|[^0-9])(19|20)\d{2}(?!\d)/g, "$1 ");
+  t = t.replace(/[.．·。、，,&]+/g, " ");
+  t = t.replace(/\s版\s|\s版$/g, " ");
+  t = t.replace(/\s+/g, " ").trim();
+  return t;
+}
+/* 盘搜关键词候选：优先保留年份/季号的"精确版"，再退到完全清洗的"通用版"，两版都搜、结果合并 */
+function panSouKeywords(rawTitle) {
+  var out = [];
+  var light = cleanTitleLight(rawTitle);
+  var full = cleanTitle(rawTitle);
+  if (light) out.push(light);
+  if (full && out.indexOf(full) < 0) out.push(full);
+  return out;
+}
+function resourceTitleLikelyMatches(resTitle, kw, year) {
+  var raw = String(resTitle || "");
+  if (/漫画|小说|绘本|连环画|轻小说|作者[:：]|\btxt\b/i.test(raw)) return false;
+  var nk = normTitleKey(kw);
+  if (!nk) return true;
+  var nt = normTitleKey(raw);
+  var idx = nt.indexOf(nk);
+  if (idx < 0) return false;
+  var hasYear = !!(year && raw.indexOf(String(year)) >= 0);
+  var core = normTitleKey(cleanTitle(raw)) || nt;
+  if (core !== nk && core.indexOf(nk) === 0) {
+    var tail = core.slice(nk.length);
+    while (EDITION_TAIL_RE.test(tail)) { var nx = tail.replace(EDITION_TAIL_RE, ""); if (nx === tail) break; tail = nx; }
+    var tailCjk = tail.replace(/[^\u3400-\u9fff\uf900-\ufaff]/g, "");
+    if (tailCjk.length >= 2 && !hasYear) return false;
+  }
+  if (idx <= 3) return true;
+  if (hasYear) return true;
+  return false;
+}
+function extPost(url, bodyObj) {
+  var body = JSON.stringify(bodyObj);
+  var headers = { "Content-Type": "application/json", "Accept": "application/json" };
+  if (state.sdkReady && window.fm && fm.req) {
+    return fm.req(url, { method: "POST", responseType: "json", timeout: 20, headers: headers, body: body }).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.body; });
+  }
+  return fetchTimeout(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: body }, 20000).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+}
+function panSouSearch(kw, year) {
+  var api = (config.panApi || PANSOU_DEFAULT_API).replace(/\/+$/, "");
+  var body = { kw: kw, res: "merge", src: "all", cloud_types: PANSOU_TYPES, channels: [] };
+  return extPost(api + "/api/search", body).then(function (d) {
+    var merged = (d && d.data && d.data.merged_by_type) || (d && d.merged_by_type) || {};
+    var out = [];
+    Object.keys(merged).forEach(function (t) {
+      if (PANSOU_KEEP.indexOf(t) < 0) return;
+      var lab = PAN_META[t] ? PAN_META[t].label : t;
+      (merged[t] || []).forEach(function (it) {
+        var url = it.url || it.link || "";
+        if (!url) return;
+        var rtitle = it.note || it.title || it.name || "";
+        if (rtitle && !resourceTitleLikelyMatches(rtitle, kw, year)) return;
+        out.push({ type: t, url: url, password: it.password || it.pwd || it.code || "", title: rtitle, label: lab, state: "idle", source: "盘搜" });
+      });
+    });
+    return out;
+  });
+}
+function runPanSou(silent) {
+  var d = state.currentDetail; if (!d) return;
+  var rawKw = ($("#heroName").textContent || "").trim();
+  if (!rawKw || rawKw === "—") rawKw = d.title || "";
+  if (!rawKw) { if (!silent) toast("无标题，无法盘搜"); return; }
+  var rawYear = yearOf(rawKw);
+  var kwList = panSouKeywords(rawKw);
+  var btn = $("#panSouBtn"); if (btn && btn.disabled) return;
+  if (btn) btn.disabled = true;
+  var token = state.panToken;
+  if (!silent) toast("盘搜中…");
+  Promise.all(kwList.map(function (kw) { return panSouSearch(kw, rawYear).then(function (r) { return r; }, function () { return []; }); })).then(function (results) {
+    if (btn) btn.disabled = false;
+    if (token !== state.panToken) return;
+    var have = {};
+    state.panItems.forEach(function (it) { have[it.type + "|" + normPanUrl(it.url)] = 1; });
+    var add = [];
+    results.forEach(function (list) {
+      (list || []).forEach(function (it) { var k = it.type + "|" + normPanUrl(it.url); if (!have[k]) { have[k] = 1; add.push(it); } });
+    });
+    if (!add.length) {
+      if (!silent) toast("盘搜没有新增结果");
+      else if (!state.panItems.length) $("#resList").replaceChildren(el("div", "empty-note", "官方资源和盘搜都没有找到，可点“盘搜”重试。"));
+      return;
+    }
+    renderResources(state.panItems.concat(add));
+    if (!silent) toast("盘搜新增 " + add.length + " 条");
+  }, function (e) {
+    if (btn) btn.disabled = false;
+    if (!silent && token === state.panToken) toast("盘搜失败：" + (e && e.message ? e.message : "检查盘搜地址"));
+  });
+}
+
+/* ---------- 列表页解析（原样移植自 woParseList / woParseListLoose） ---------- */
+function pmDoc(html) {
+  try { return new DOMParser().parseFromString(String(html).replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, ""), "text/html"); }
+  catch (e) { return null; }
+}
+function pmAbs(base, u) {
+  if (!u) return "";
+  if (/^https?:/i.test(u)) return u;
+  if (u.indexOf("//") === 0) return "https:" + u;
+  try { return new URL(u, trimSlash(base) + "/").href; } catch (e) { return trimSlash(base) + (u.charAt(0) === "/" ? "" : "/") + u; }
+}
+function parseList(html, base) {
+  var d = pmDoc(html); if (!d) return [];
+  var out = [], seen = {};
+  var els = d.querySelectorAll(".module-item, .module-search-item, #main .module-item, .module-items .module-item, .stui-vodlist__box, ul.stui-vodlist > li, .public-list-box, .video-info, ul.pic-list > li, .sr_lists > ul > li, .bg-cardbg");
+  Array.from(els).forEach(function (elm) {
+    var a = elm.querySelector("a[href]") || (elm.closest ? elm.closest("a[href]") : null) || elm;
+    var href = a && a.getAttribute ? (a.getAttribute("href") || "") : "";
+    if (!href || href.charAt(0) === "#") return;
+    var abs = pmAbs(base || pmBase(), href);
+    if (seen[abs]) return;
+    var img = elm.querySelector("img");
+    var poster = img ? (img.getAttribute("data-src") || img.getAttribute("data-original") || img.getAttribute("src") || "") : "";
+    var tEl = elm.querySelector(".module-item-title, .module-poster-item-title, .module-search-item-title, .video-title, .title, .video-name, h3 b, h3");
+    var title = sanitizeSiteTitle((a && a.getAttribute && a.getAttribute("title")) || (img && img.getAttribute("alt")) || (tEl ? tEl.textContent : "") || (a ? a.textContent : "") || "");
+    if (!title) return;
+    seen[abs] = 1;
+    out.push({ id: "pm_" + (out.length + 1) + "_" + Date.now(), title: title.slice(0, 60), poster: pmAbs(base || pmBase(), poster), href: abs });
+  });
+  if (!out.length) out = parseListLoose(d, base);
+  return out;
+}
+/* 结构化兜底：pomo 这类纯 Tailwind 站没有 MacCMS 约定类名，按“站内链接里包一张 img”当一张卡 */
+function parseListLoose(d, base) {
+  var out = [], seen = {}, rootBase = trimSlash(base || pmBase());
+  var imgs = d.querySelectorAll("a[href] img, a[href] > img");
+  Array.from(imgs).forEach(function (img) {
+    var a = img.closest ? img.closest("a[href]") : null; if (!a) return;
+    var href = a.getAttribute("href") || "";
+    if (!href || href.charAt(0) === "#" || /^(javascript|mailto|tel):/i.test(href)) return;
+    var abs = pmAbs(rootBase, href);
+    var path = ""; try { path = new URL(abs).pathname; } catch (e) { path = abs.replace(/^https?:\/\/[^/]+/, ""); }
+    if (!path || path === "/") return;
+    if (/\.(jpg|jpeg|png|webp|gif|css|js)$/i.test(path)) return;
+    if (/^\/(?:page|tag|search|login|register|user|about)\b/i.test(path)) return;
+    if (seen[abs]) return;
+    var poster = img.getAttribute("data-src") || img.getAttribute("data-original") || img.getAttribute("src") || "";
+    if (/logo|avatar|icon|placeholder/i.test(poster)) return;
+    var card = a.parentElement || a;
+    var tEl = a.querySelector("h1,h2,h3,h4,.title,.name") || card.querySelector("h1,h2,h3,h4,.title,.name");
+    var title = sanitizeSiteTitle(a.getAttribute("title") || img.getAttribute("alt") || (tEl ? tEl.textContent : "") || a.textContent || "");
+    if (!title) return;
+    seen[abs] = 1;
+    out.push({ id: "pm_L" + (out.length + 1) + "_" + Date.now(), title: title.slice(0, 60), poster: pmAbs(rootBase, poster), href: abs });
+  });
+  return out;
+}
+
+/* ---------- 详情页解析（原样移植自 woParseDetail） ---------- */
+function parseDetail(html) {
+  var d = pmDoc(html);
+  var title = "", poster = "", overview = "";
+  if (d) {
+    var h1 = d.querySelector(".module-info-heading h1, .video-info-header h1, h1, .movie-title, h2");
+    title = h1 ? h1.textContent.trim() : "";
+    var pic = d.querySelector(".module-info-poster img, .module-item-pic img, .detail-pic img");
+    poster = pic ? (pic.getAttribute("data-original") || pic.getAttribute("data-src") || pic.getAttribute("src") || "") : "";
+    var ov = d.querySelector(".module-info-introduction-content, .module-info-content, .video-info-content, .content");
+    overview = ov ? ov.textContent.replace(/\s+/g, " ").trim() : "";
+  }
+  var pans = [], seen = {};
+  function pushOne(u, rowTitle) {
+    u = String(u || "").replace(/&amp;/g, "&").replace(/[，。、）)"'<]+$/, "");
+    if (!u) return;
+    var type = diskType(u);
+    var k = type + "|" + normPanUrl(u);
+    if (seen[k]) return; seen[k] = 1;
+    var pwd = (u.match(/[?&](?:pwd|password|code)=([0-9a-zA-Z]+)/) || [])[1] || "";
+    pans.push({ type: type, url: u, password: pwd, title: (rowTitle || "").replace(/\s+/g, " ").trim(),
+                label: (PAN_META[type] ? PAN_META[type].label : type), state: "idle" });
+  }
+  function pushFrom(scopeEl, rowTitle) {
+    var raw = String(scopeEl ? scopeEl.innerHTML : "").replace(/\\\//g, "/");
+    var hits = [], mm;
+    PAN_RE.lastIndex = 0; while ((mm = PAN_RE.exec(raw))) hits.push(mm[0]);
+    var mg; MAG_RE.lastIndex = 0; while ((mg = MAG_RE.exec(raw))) hits.push(mg[0]);
+    for (var i = 0; i < hits.length; i++) pushOne(hits[i], rowTitle);
+  }
+  function inOtherBlock(n) {
+    for (var p = n; p && p.tagName; p = p.parentElement) {
+      var tag = String(p.tagName).toLowerCase();
+      if (tag === "footer" || tag === "aside") return true;
+      var cn = p.className; cn = (cn && cn.baseVal !== undefined) ? cn.baseVal : cn;
+      var toks = String(cn || "").split(/\s+/).concat(String(p.id || "").split(/\s+/));
+      for (var i = 0; i < toks.length; i++) if (toks[i] && OTHER_BLOCK_RE.test(toks[i])) return true;
+    }
+    return false;
+  }
+  if (d) {
+    // ① 显式声明的网盘链接（href/data-url 等）：pomo 的“一键转存”图标按钮挂在标题区，不在资源行里
+    var ATTRS = ["href", "data-url", "data-link", "data-href", "data-clipboard-text"];
+    var linkNodes = d.querySelectorAll("a[href], [data-url], [data-link], [data-href], [data-clipboard-text]");
+    Array.from(linkNodes).forEach(function (n) {
+      if (inOtherBlock(n)) return;
+      for (var ai = 0; ai < ATTRS.length; ai++) {
+        var v = n.getAttribute(ATTRS[ai]); if (!v) continue;
+        v = String(v).replace(/\\\//g, "/").trim();
+        var isMag = /^magnet:\?xt=urn:btih:[A-Za-z0-9]{32,40}/i.test(v);
+        PAN_RE.lastIndex = 0; var isPan = PAN_RE.test(v);
+        if (!isMag && !isPan) continue;
+        var t = n.getAttribute("title") || n.textContent || "";
+        if (!t.trim()) {
+          var host = n.closest ? (n.closest(".download-item") || n.closest("li") || n.parentElement) : n.parentElement;
+          var th = host && host.querySelector ? host.querySelector(".x-dbjs-download-link, h4, .title, strong") : null;
+          t = th ? th.textContent : "";
+        }
+        pushOne(v, t);
+      }
+    });
+    // ② 每条资源行
+    var rows = d.querySelectorAll(".module-row-one, .module-row-info, .module-row-text, .downlist li, .down-list li, .module-blocklist .module-row-one, .download-item, .x-dbjs-accordion-inner .download-links");
+    if (rows.length) Array.from(rows).forEach(function (row) {
+      var t = row.querySelector(".module-row-title, .module-row-text h4, h4, .title, strong, .x-dbjs-download-link, a[data-url]");
+      pushFrom(row, t ? t.textContent : "");
+    });
+    // ③ 资源区整块兜底
+    if (!pans.length) {
+      var box = d.querySelector(".module-tab-content, .module-downlist, .module-play-list, #download, .downurl, .pan-box");
+      if (box) pushFrom(box, "");
+    }
+  }
+  if (!pans.length) pushFrom(d && d.body ? d.body : { innerHTML: html }, "");
+  // ④ 源码兜底：pomo 常把网盘链接放进 <script> JSON，DOM 解析前就被剥掉了，得对原始文本再扫一遍
+  var hasDisk = false;
+  for (var pi = 0; pi < pans.length; pi++) if (pans[pi].type !== "magnet") { hasDisk = true; break; }
+  if (!hasDisk) {
+    var rawAll = String(html || "").replace(/\\\//g, "/").replace(/\\u002[fF]/g, "/").replace(/&#0*47;/g, "/").replace(/&#x0*2[fF];/g, "/");
+    var hits2 = [], m2; PAN_RE.lastIndex = 0; while ((m2 = PAN_RE.exec(rawAll))) hits2.push(m2[0]);
+    for (var qi = 0; qi < hits2.length; qi++) pushOne(hits2[qi], "");
+  }
+  // 过滤“别的片子”混进来的资源
+  var selfKey = normTitleKey(title);
+  if (selfKey) pans = pans.filter(function (p) {
+    var rt = p.title || ""; if (!rt) return true;
+    var mk = rt.match(/[《【]([^》】]{2,30})[》】]/); if (!mk) return true;
+    var other = normTitleKey(mk[1]); if (!other) return true;
+    return other.indexOf(selfKey) >= 0 || selfKey.indexOf(other) >= 0;
+  });
+  return { title: title, poster: pmAbs(pmBase(), poster), overview: overview, pans: pans };
+}
+
+/* ---------- 列表/搜索请求 ---------- */
+/* 直接发起单次请求，不走 goodDomain 偏好也不走 memo 缓存，供“按域名轮询”场景使用 */
+function fetchRaw(url) {
+  if (state.sdkReady && window.fm && fm.req) {
+    return fm.req(url, { method: "GET", responseType: "text", timeout: 15, credentials: "include",
+                        headers: { "User-Agent": PM_UA, "Referer": url } })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.body; });
+  }
+  return fetchTimeout(url, { headers: {} }, 15000).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); });
+}
+/* 按“域名 × 路径变体”逐一尝试，解析出内容才算数；
+   避免当前 goodDomain 对某个分类恰好返回空白/占位页时直接判空，而不去试备用镜像 */
+function fetchAcrossDomains(paths) {
+  var domains = pmDomains();
+  function tryAt(di, pi) {
+    if (di >= domains.length) return Promise.resolve([]);
+    if (pi >= paths.length) return tryAt(di + 1, 0);
+    var dom = domains[di], url = dom + paths[pi];
+    return fetchRaw(url).then(function (html) {
+      if (!html || html.length < 300) return tryAt(di, pi + 1);
+      var list = parseList(html, dom);
+      if (list.length) { state.goodDomain = dom; clearBad(dom); setConn(true, dom); return list; }
+      return tryAt(di, pi + 1);
+    }, function () { markBad(dom); return tryAt(di, pi + 1); });
+  }
+  return tryAt(0, 0);
+}
+function fetchList(cat, page) {
+  var urls = [].concat(PM.categoryUrl(cat, page));
+  return fetchAcrossDomains(urls);
+}
+var SEARCH_BUDGET_MS = 22000;
+function withBudget(promise, ms, fallback) {
+  return new Promise(function (resolve) {
+    var done = false;
+    var timer = setTimeout(function () { if (!done) { done = true; resolve(fallback); } }, ms);
+    promise.then(function (v) { if (!done) { done = true; clearTimeout(timer); resolve(v); } },
+                 function () { if (!done) { done = true; clearTimeout(timer); resolve(fallback); } });
+  });
+}
+function searchPm(kw) {
+  var ek = encodeURIComponent(kw);
+  var own = PM.searchUrls.map(function (u) { return u.replace("{kw}", ek); });
+  return withBudget(fetchAcrossDomains(own), SEARCH_BUDGET_MS, []);
+}
+
+/* ================= 渲染：首页 ================= */
+function fmtSize(n){ return n; }
+function makeImg(url, altText) {
+  var img = el("img"); img.decoding = "async"; img.loading = IS_TV ? "eager" : "lazy"; img.alt = altText || "";
+  img.onload = function () { this.classList.add("on"); if (this.parentElement) this.parentElement.classList.add("loaded"); };
+  img.onerror = function () {
+    this.style.display = "none";
+    if (this.parentElement) this.parentElement.classList.add("loaded");
+    var ph = this.parentElement.querySelector(".ph"); if (!ph) { ph = el("div", "ph", altText || ""); this.parentElement.appendChild(ph); }
+  };
+  img.src = url; return img;
+}
+function fileCard(item, idx, caseNo) {
+  var card = el("div", "file reveal"); card.style.animationDelay = (idx * 40) + "ms";
+  card.setAttribute("tabindex", "0"); card.setAttribute("role", "button");
+  var thumb = el("div", "thumb");
+  if (item.poster) thumb.appendChild(makeImg(item.poster, item.title));
+  else { thumb.appendChild(el("div", "ph", item.title)); thumb.classList.add("loaded"); }
+  thumb.appendChild(el("span", "tag", caseNo));
+  card.appendChild(thumb);
+  var main = el("div", "main");
+  main.appendChild(el("div", "title", item.title));
+  card.appendChild(main);
+  function go() { openDetail(item); }
+  card.addEventListener("click", go);
+  card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  return card;
+}
+function renderChips() {
+  var box = $("#catChips"); var frag = document.createDocumentFragment();
+  PM.cats.forEach(function (c, i) {
+    var b = el("button", "chip" + (i === 0 ? " active" : ""), c[1]);
+    b.type = "button"; b.setAttribute("tabindex", "0");
+    b.onclick = function () {
+      if (state.homeCat === c[0]) return;
+      Array.from(box.children).forEach(function (x) { x.classList.remove("active"); }); b.classList.add("active");
+      state.homeCat = c[0];
+      loadHomeCategory(true);
+    };
+    frag.appendChild(b);
+  });
+  box.replaceChildren(frag);
+}
+function catIndexOf(catId) {
+  for (var i = 0; i < PM.cats.length; i++) if (PM.cats[i][0] === catId) return i;
+  return 0;
+}
+function stepCategory(dir) {
+  var next = (catIndexOf(state.homeCat) + dir + PM.cats.length) % PM.cats.length;
+  var c = PM.cats[next];
+  if (state.homeCat === c[0]) return;
+  state.homeCat = c[0];
+  var box = $("#catChips");
+  Array.from(box.children).forEach(function (x, i) { x.classList.toggle("active", i === next); });
+  var activeChip = box.children[next];
+  if (activeChip && activeChip.scrollIntoView) activeChip.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  loadHomeCategory(true);
+}
+/* 首页：与 browse 页一致的完整分页卡片网格，随分类 chip 切换，而不是多个小行预览 */
+function loadHomeCategory(reset) {
+  if (reset) {
+    state.homeReqToken++; state.homePage = 1; state.homeSource = []; state.homeNoMore = false; state.homeLoading = false;
+    $("#homeGrid").replaceChildren(el("div", "empty-note", "读取中…"));
+    $("#homeMore").disabled = false; $("#homeMore").textContent = "滑动加载更多";
+  }
+  if (state.homeLoading || state.homeNoMore) return;
+  var token = state.homeReqToken;
+  state.homeLoading = true;
+  var page = reset ? 1 : (state.homePage + 1);
+  $("#homeMore").textContent = "加载中…"; $("#homeMore").disabled = true;
+  fetchList(state.homeCat, page).then(function (list) {
+    state.homeLoading = false; if (token !== state.homeReqToken) return;
+    if (!list.length) {
+      state.homeNoMore = true; $("#homeMore").textContent = "没有更多了"; $("#homeMore").disabled = true;
+      if (!state.homeSource.length) $("#homeGrid").replaceChildren(el("div", "empty-note", "暂无数据"));
+      return;
+    }
+    if (reset) $("#homeGrid").replaceChildren();
+    state.homePage = page; state.homeSource = state.homeSource.concat(list);
+    var frag = document.createDocumentFragment();
+    list.forEach(function (it, i) { frag.appendChild(fileCard(it, i, String(state.homeSource.length - list.length + i + 1))); });
+    $("#homeGrid").appendChild(frag);
+    $("#homeMore").disabled = false; $("#homeMore").textContent = "滑动加载更多";
+    $("#footStat").textContent = "LINKED";
+  }, function () {
+    state.homeLoading = false; if (token !== state.homeReqToken) return;
+    $("#homeMore").textContent = "加载失败，点击重试"; $("#homeMore").disabled = false;
+    if (!state.homeSource.length) $("#homeGrid").replaceChildren(el("div", "empty-note", "加载失败，可重试"));
+  });
+}
+$("#homeMore").onclick = function () { loadHomeCategory(false); };
+
+/* ================= 渲染：分类/搜索浏览 ================= */
+function openBrowse(cat, name, mode) {
+  state.view = "browse"; state.mode = mode; state.cat = cat; state.kw = (mode === "search" ? name : "");
+  state.page = 1; state.source = []; state.noMore = false; state.loading = false; state.reqToken++;
+  $("#browseTitle").textContent = mode === "search" ? ("搜索 · " + name) : name;
+  $("#browseTag").textContent = mode === "search" ? "SEARCH" : "BROWSE";
+  $("#browseGrid").replaceChildren();
+  $("#browseMore").disabled = false; $("#browseMore").textContent = "滑动加载更多";
+  switchView("viewBrowse");
+  loadBrowsePage(true);
+}
+function loadBrowsePage(reset) {
+  if (state.loading) return;
+  var token = state.reqToken;
+  state.loading = true;
+  var page = reset ? 1 : (state.page + 1);
+  $("#browseMore").textContent = "加载中…"; $("#browseMore").disabled = true;
+  var p = state.mode === "search" ? (page === 1 ? searchPm(state.kw) : Promise.resolve([])) : fetchList(state.cat, page);
+  p.then(function (list) {
+    state.loading = false; if (token !== state.reqToken) return;
+    if (!list.length) {
+      state.noMore = true; $("#browseMore").textContent = "没有更多了"; $("#browseMore").disabled = true;
+      if (!state.source.length) $("#browseGrid").replaceChildren(el("div", "empty-note", "未检索到任何条目"));
+      return;
+    }
+    state.page = page; state.source = state.source.concat(list);
+    var frag = document.createDocumentFragment();
+    list.forEach(function (it, i) { frag.appendChild(fileCard(it, i, String(state.source.length - list.length + i + 1))); });
+    $("#browseGrid").appendChild(frag);
+    $("#browseMore").disabled = false; $("#browseMore").textContent = "滑动加载更多";
+  }, function () {
+    state.loading = false; if (token !== state.reqToken) return;
+    $("#browseMore").textContent = "加载失败，点击重试"; $("#browseMore").disabled = false;
+    if (!state.source.length) $("#browseGrid").replaceChildren(el("div", "empty-note", "加载失败，可重试"));
+  });
+}
+
+/* ================= 渲染：详情 + 网盘资源 ================= */
+function openDetail(item) {
+  state.currentDetail = item; state.panToken++;
+  var token = state.panToken;
+  $("#heroName").textContent = item.title;
+  $("#heroCodename").textContent = "ASSET ID // " + item.id.slice(0, 14).toUpperCase();
+  $("#heroCase").textContent = "CASE FILE — " + String(Math.abs(hashOf(item.id)) % 900 + 100);
+  $("#heroNote").textContent = "";
+  var img = $("#heroImg");
+  img.onload = function () {
+    this.classList.add("on");
+    var landscape = this.naturalWidth > 0 && this.naturalHeight > 0 && this.naturalWidth > this.naturalHeight * 1.05;
+    $("#heroFile").classList.toggle("landscape", landscape);
+  };
+  img.classList.remove("on");
+  $("#heroFile").classList.remove("landscape");
+  if (item.poster) { img.src = item.poster; img.style.display = ""; } else { img.style.display = "none"; }
+  $("#resTabs").replaceChildren();
+  $("#resList").replaceChildren(el("div", "empty-note", "正在检索网盘资源…"));
+  state.panItems = []; state.qFilter = null; state.qGroups = [];
+  switchView("viewDetail");
+  window.scrollTo(0, 0);
+
+  httpAbs(item.href).then(function (html) {
+    if (token !== state.panToken) return;
+    var d = parseDetail(html);
+    if (d.title) $("#heroName").textContent = d.title;
+    if (d.overview && !isJunkOverview(d.overview)) $("#heroNote").textContent = d.overview;
+    if (d.poster && !item.poster) { $("#heroImg").classList.remove("on"); $("#heroFile").classList.remove("landscape"); $("#heroImg").src = d.poster; $("#heroImg").style.display = ""; }
+    renderResources(d.pans);
+    var pt = state.panToken; setTimeout(function () { if (pt === state.panToken) runPanSou(true); }, 350);
+  }, function () {
+    if (token !== state.panToken) return;
+    $("#resList").replaceChildren(el("div", "empty-note", "详情页请求失败，可返回重试"));
+  });
+}
+function hashOf(s) { var h = 0, i; s = s || ""; for (i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return h; }
+
+function renderResources(pans) {
+  state.panItems = pans || [];
+  if (!state.panItems.length) {
+    $("#resTabs").replaceChildren();
+    $("#resList").replaceChildren(el("div", "empty-note", "没有找到网盘资源，可返回重试"));
+    return;
+  }
+  var groups = [];
+  state.panItems.forEach(function (p) { var q = p.label || "网盘"; if (groups.indexOf(q) < 0) groups.push(q); });
+  groups.sort(function (a, b) {
+    var ia = PAN_GROUP_ORDER.indexOf(a); if (ia < 0) ia = 99;
+    var ib = PAN_GROUP_ORDER.indexOf(b); if (ib < 0) ib = 99;
+    return ia - ib;
+  });
+  state.qGroups = groups;
+  state.qFilter = groups[0];
+  renderResTabs();
+  paintResources();
+  scheduleCheck();
+}
+function renderResTabs() {
+  var box = $("#resTabs");
+  if (state.qGroups.length < 2) { box.replaceChildren(); return; }
+  var frag = document.createDocumentFragment();
+  state.qGroups.forEach(function (q) {
+    var b = el("button", "restab" + (q === state.qFilter ? " active" : ""), q);
+    b.type = "button"; b.setAttribute("tabindex", "0");
+    b.onclick = function () {
+      state.qFilter = q;
+      Array.from(box.children).forEach(function (x) { x.classList.remove("active"); }); b.classList.add("active");
+      paintResources();
+    };
+    frag.appendChild(b);
+  });
+  box.replaceChildren(frag);
+}
+function paintResources() {
+  var list = $("#resList");
+  var vis = [];
+  state.panItems.forEach(function (it, i) { if ((it.label || "网盘") === state.qFilter) vis.push({ it: it, i: i }); });
+  var frag = document.createDocumentFragment();
+  vis.forEach(function (pair) {
+    var item = pair.it, i = pair.i;
+    var row = el("div", "res-row"); row.setAttribute("tabindex", "0"); row.setAttribute("role", "button");
+    row.setAttribute("data-pan-index", String(i));
+    var dot = el("span", "res-dot " + (item.state || "idle")); row.appendChild(dot);
+    var badge = el("span", "res-badge", item.label || diskType(item.url)); row.appendChild(badge);
+    var main = el("div", "res-main");
+    main.appendChild(el("div", "res-title", (item.title ? cleanPanRowTitle(item.title) : "") || (item.label + "网盘")));
+    var subTxt = item.password ? ("提取码 " + item.password) : "点击播放 / 长按复制链接";
+    main.appendChild(el("div", "res-sub", subTxt));
+    row.appendChild(main);
+    row.appendChild(el("span", "res-action", "PLAY ▸"));
+    function act() { playResource(item); }
+    row.addEventListener("click", act);
+    row.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); act(); } });
+    frag.appendChild(row);
+  });
+  list.replaceChildren(frag);
+}
+function playResource(item) {
+  var play = (PAN_META[item.type] && PAN_META[item.type].play) || "";
+  var title = (state.currentDetail && state.currentDetail.title) || (item.title || "").trim() || "";
+  var pic = (state.currentDetail && state.currentDetail.poster) || "";
+  if (state.sdkReady && window.fm && fm.pan && fm.pan.play && play) {
+    toast("正在打开播放器…");
+    fm.pan.play({ type: play, url: item.url, password: item.password || "", title: title, pic: pic, site: "pomo" }).then(function () {}, function () { toast("播放失败，已为你复制链接"); copyText(item.url); });
+    return;
+  }
+  copyText(item.url);
+}
+/* 网盘有效性检测（受 driveCheck 开关控制），可见即检测 */
+function scheduleCheck() {
+  if (!state.driveCheck || !state.sdkReady || !window.fm || !fm.pan || !fm.pan.check) return;
+  var list = $("#resList"); if (!list) return;
+  var due = [];
+  state.panItems.forEach(function (it, i) { if (!it._checked && CHECKABLE.indexOf(it.type) >= 0) due.push(it); });
+  if (!due.length) return;
+  var token = state.panToken;
+  due.forEach(function (it) { it._checked = true; it.state = "checking"; });
+  refreshDots();
+  var payload = due.slice(0, 10).map(function (it) { return { type: it.type, url: it.url, password: it.password || "" }; });
+  fm.pan.check(payload).then(function (res) {
+    if (token !== state.panToken) return;
+    var results = (res && res.results) || [];
+    due.slice(0, 10).forEach(function (it, i) { it.state = (results[i] && results[i].state) || "uncertain"; });
+    dropInvalid();
+  }, function () {
+    if (token !== state.panToken) return;
+    due.slice(0, 10).forEach(function (it) { it.state = "uncertain"; });
+    refreshDots();
+  });
+}
+/* 检测到失效(bad)的网盘直接从列表里去掉，不再展示一个红点占位 */
+function dropInvalid() {
+  var before = state.panItems.length;
+  var kept = state.panItems.filter(function (it) { return it.state !== "bad"; });
+  if (kept.length === before) { refreshDots(); return; }
+  var prevFilter = state.qFilter;
+  renderResources(kept);
+  if (kept.length && state.qGroups.indexOf(prevFilter) >= 0) { state.qFilter = prevFilter; renderResTabs(); paintResources(); }
+}
+function refreshDots() {
+  var rows = $("#resList").querySelectorAll(".res-row");
+  for (var i = 0; i < rows.length; i++) {
+    var idx = parseInt(rows[i].getAttribute("data-pan-index"), 10);
+    var it = state.panItems[idx]; if (!it) continue;
+    var dot = rows[i].querySelector(".res-dot"); if (dot) dot.className = "res-dot " + (it.state || "idle");
+  }
+}
+
+/* ================= 视图切换 / 历史（Android 手势返回） ================= */
+function switchView(id) {
+  ["viewHome", "viewBrowse", "viewDetail"].forEach(function (v) { $("#" + v).classList.toggle("active", v === id); });
+  if (id !== "viewHome") history.pushState({ v: id }, "", "#" + id);
+}
+window.addEventListener("popstate", function (e) {
+  var v = (e.state && e.state.v) || "viewHome";
+  ["viewHome", "viewBrowse", "viewDetail"].forEach(function (x) { $("#" + x).classList.toggle("active", x === v); });
+});
+$("#browseBack").onclick = function () { history.back(); };
+$("#detailBack").onclick = function () { history.back(); };
+$("#browseMore").onclick = function () { loadBrowsePage(false); };
+
+/* ---------- 首页左右滑动切换分类 ---------- */
+(function () {
+  var host = $("#viewHome"); if (!host) return;
+  var sx = 0, sy = 0, tracking = false;
+  host.addEventListener("touchstart", function (e) {
+    if (e.touches.length !== 1 || (e.target.closest && e.target.closest(".chip-row"))) { tracking = false; return; }
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY; tracking = true;
+  }, { passive: true });
+  host.addEventListener("touchend", function (e) {
+    if (!tracking) return; tracking = false;
+    var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.4) return;   // 太短或更偏向纵向滚动，忽略
+    stepCategory(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();
+
+/* ---------- 回到顶部：滑动够远才显示，靠边悬浮 ---------- */
+(function () {
+  var btn = $("#toTopBtn"); if (!btn) return;
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(function () { btn.classList.toggle("show", window.scrollY > 600); ticking = false; });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  btn.onclick = function () { window.scrollTo({ top: 0, behavior: "smooth" }); };
+})();
+Store.get("pmPanApi").then(function (v) { if (v) config.panApi = v; });
+Store.get("pmPanTypes").then(function (v) {
+  if (!v) return;
+  try { var arr = JSON.parse(v); if (Array.isArray(arr) && arr.length) { PANSOU_TYPES = arr; PANSOU_KEEP = PANSOU_TYPES.concat(["guangya"]); } } catch (e) {}
+});
+(function () {
+  var btn = $("#panSouBtn"); if (!btn) return;
+  var pressTimer = 0, longPressed = false;
+  btn.onclick = function () { if (longPressed) { longPressed = false; return; } runPanSou(false); };
+  function startPress() { longPressed = false; pressTimer = setTimeout(function () { longPressed = true; openSettings(); }, 600); }
+  function cancelPress() { clearTimeout(pressTimer); }
+  btn.addEventListener("pointerdown", startPress);
+  ["pointerup", "pointerleave", "pointercancel"].forEach(function (ev) { btn.addEventListener(ev, cancelPress); });
+})();
+
+/* ---------- 设置弹窗：镜像域名 + 盘搜地址 + 盘搜网盘类型，统一风格替代原生 prompt ---------- */
+var stPanTypesTemp = [];
+function openSettings() {
+  $("#stDomain").value = state.goodDomain || "";
+  $("#stPanApi").value = config.panApi || "";
+  stPanTypesTemp = PANSOU_TYPES.slice();
+  renderPanTypeChips();
+  $("#settingsMask").classList.add("show");
+}
+function closeSettings() { $("#settingsMask").classList.remove("show"); }
+function renderPanTypeChips() {
+  var box = $("#stPanTypes"); var frag = document.createDocumentFragment();
+  CHECKABLE.forEach(function (t) {
+    var b = el("button", "modal-chip" + (stPanTypesTemp.indexOf(t) >= 0 ? " active" : ""), (PAN_META[t] ? PAN_META[t].label : t));
+    b.type = "button";
+    b.onclick = function () {
+      var i = stPanTypesTemp.indexOf(t);
+      if (i >= 0) stPanTypesTemp.splice(i, 1); else stPanTypesTemp.push(t);
+      b.classList.toggle("active");
+    };
+    frag.appendChild(b);
+  });
+  box.replaceChildren(frag);
+}
+$("#settingsMask").addEventListener("click", function (e) { if (e.target === this) closeSettings(); });
+$("#stCancel").onclick = closeSettings;
+$("#stSave").onclick = function () {
+  var dom = trimSlash($("#stDomain").value.trim());
+  if (dom !== (state.goodDomain || "")) {
+    state.goodDomain = dom; Store.set("pmBase", dom); _memo = {};
+    setConn(true, dom || undefined);
+    loadHomeCategory(true);
+  }
+  var api = trimSlash($("#stPanApi").value.trim());
+  config.panApi = api; Store.set("pmPanApi", api);
+  var types = stPanTypesTemp.length ? stPanTypesTemp.slice() : CHECKABLE.slice();
+  PANSOU_TYPES = types; PANSOU_KEEP = PANSOU_TYPES.concat(["guangya"]);
+  Store.set("pmPanTypes", JSON.stringify(types));
+  toast("设置已保存");
+  closeSettings();
+};
+
+/* ---------- 滚动到底部自动加载更多，按钮仅作为状态提示 / 失败重试入口保留 ---------- */
+(function () {
+  if (!("IntersectionObserver" in window)) return;
+  function watch(id, loader) {
+    var target = $("#" + id); if (!target) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) loader(false); });
+    }, { rootMargin: "600px 0px" });
+    io.observe(target);
+  }
+  watch("homeMore", loadHomeCategory);
+  watch("browseMore", loadBrowsePage);
+})();
+
+/* ================= 搜索 ================= */
+function doSearch() {
+  var kw = $("#searchInput").value.trim();
+  if (!kw) return;
+  openBrowse("", kw, "search");
+}
+$("#searchGo").onclick = doSearch;
+$("#searchInput").addEventListener("keydown", function (e) { if (e.key === "Enter") doSearch(); });
+$("#searchInput").addEventListener("input", function () { $("#searchClear").classList.toggle("hidden", !this.value); });
+$("#searchClear").onclick = function () { $("#searchInput").value = ""; $("#searchClear").classList.add("hidden"); $("#searchInput").focus(); };
+
+/* 单击 logo 切换主题色；连续三击（应急）可手动指定自定义域名 */
+var THEMES = ["", "cyan", "rose", "violet", "green"];
+var THEME_NAMES = { "": "琥珀金", cyan: "极光青", rose: "赤霞红", violet: "暗夜紫", green: "深林绿" };
+function applyTheme(t) {
+  if (t) document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+}
+var savedTheme = "";
+Store.get("pmTheme").then(function (v) { savedTheme = (v && THEMES.indexOf(v) >= 0) ? v : ""; applyTheme(savedTheme); });
+
+/* 单击 logo 切换主题色；连续三击（应急）打开设置弹窗（镜像域名/盘搜地址/盘搜网盘类型） */
+var titleTapCount = 0, titleTapTimer = 0;
+$("#titleTap").onclick = function () {
+  titleTapCount++;
+  clearTimeout(titleTapTimer);
+  titleTapTimer = setTimeout(function () {
+    if (titleTapCount === 1) {
+      var idx = (THEMES.indexOf(savedTheme) + 1) % THEMES.length;
+      savedTheme = THEMES[idx];
+      applyTheme(savedTheme);
+      Store.set("pmTheme", savedTheme);
+      toast("主题：" + THEME_NAMES[savedTheme]);
+    }
+    titleTapCount = 0;
+  }, 600);
+  if (titleTapCount >= 3) {
+    titleTapCount = 0;
+    clearTimeout(titleTapTimer);
+    openSettings();
+  }
+};
+
+/* ================= 状态栏时钟 + 背景粒子连线（原样移植自发布页） ================= */
+var clockEl = $("#clock");
+function pad(n) { return String(n).padStart(2, "0"); }
+function tickClock() {
+  var d = new Date();
+  clockEl.textContent = d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "  " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+}
+tickClock(); setInterval(tickClock, 1000);
+
+(function () {
+  var canvas = $("#bgCanvas"); if (!canvas || !canvas.getContext || IS_TV) return;
+  var ctx = canvas.getContext("2d");
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var COLORS = ["217,168,64", "87,216,222"];
+  var w, h, nodes = [];
+  function resize() {
+    w = canvas.width = Math.floor(window.innerWidth * dpr); h = canvas.height = Math.floor(window.innerHeight * dpr);
+    canvas.style.width = window.innerWidth + "px"; canvas.style.height = window.innerHeight + "px";
+  }
+  function initNodes() {
+    var count = Math.min(60, Math.floor((window.innerWidth * window.innerHeight) / 26000));
+    nodes = Array.from({ length: count }, function () { return {
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.18 * dpr, vy: (Math.random() - 0.5) * 0.18 * dpr,
+      c: COLORS[Math.random() < 0.72 ? 0 : 1]
+    }; });
+  }
+  function frame() {
+    ctx.clearRect(0, 0, w, h);
+    nodes.forEach(function (n) { n.x += n.vx; n.y += n.vy; if (n.x < 0 || n.x > w) n.vx *= -1; if (n.y < 0 || n.y > h) n.vy *= -1; });
+    var linkDist = 130 * dpr;
+    for (var i = 0; i < nodes.length; i++) for (var j = i + 1; j < nodes.length; j++) {
+      var a = nodes[i], b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < linkDist) { ctx.strokeStyle = "rgba(" + a.c + "," + ((1 - dist / linkDist) * 0.18) + ")"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+    }
+    nodes.forEach(function (n) { ctx.fillStyle = "rgba(" + n.c + ",0.55)"; ctx.beginPath(); ctx.arc(n.x, n.y, 1.6 * dpr, 0, Math.PI * 2); ctx.fill(); });
+    if (!reduceMotion) requestAnimationFrame(frame);
+  }
+  resize(); initNodes();
+  if (reduceMotion) frame(); else requestAnimationFrame(frame);
+  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { resize(); initNodes(); }, 150); });
+})();
+
+/* ================= 启动 ================= */
+Store.get("pmBase").then(function (v) { if (v) state.goodDomain = v; }).then(function () {
+  state.homeCat = PM.cats[0][0];
+  renderChips();
+  loadHomeCategory(true);
+});
+
+(function () {
+  var boot = $("#bootScreen"); if (!boot) return;
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (IS_TV || reduceMotion) { boot.classList.add("hide"); return; }
+  var done = false;
+  function dismiss() { if (done) return; done = true; boot.classList.add("hide"); }
+  setTimeout(dismiss, 900);
+  boot.addEventListener("click", dismiss);
+})();
+</script>
+</body>
+</html>

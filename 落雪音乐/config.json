@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "haitangResolveUrl": "https://musicserver.haitangw.cc/v1/music/resolve-url",
+  "nianxinTx": "https://mcp.nianxinxz.com/share/ceshi/tx.php",
+  "nianxinWy": "https://mcp.nianxinxz.com/share/ceshi/wy.php",
+  "haitangKg": "https://music.haitangw.cc/kgqq1/kg.php",
+  "haitangMg": "https://musicapi.haitangw.net/music/mg.php",
+  "kuwoUrl": "http://nmobi.kuwo.cn/mobi.s",
+  "kuwoSource": "kwplayerhd_ar_4.3.0.8_tianbao_T1A_qirui.apk",
+  "levelMap": {
+    "128k": "standard",
+    "320k": "exhigh",
+    "flac": "lossless",
+    "flac24bit": "lossless"
+  },
+  "kwBr": {
+    "128k": "128kmp3",
+    "320k": "320kmp3",
+    "flac": "2000kflac",
+    "flac24bit": "4000kflac"
+  }
+}

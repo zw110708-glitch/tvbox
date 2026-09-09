@@ -1,0 +1,347 @@
+{
+  "spider": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/jar/pg.jar",
+  "sites": [
+    {
+      "key": "豆瓣",
+      "name": "豆瓣",
+      "type": 3,
+      "api": "csp_Douban",
+      "searchable": 0,
+      "changeable": 1,
+      "indexs": 1,
+      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json$$$https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/douban.json"
+    },
+    {
+      "key": "网盘配置",
+      "name": "网盘及彈幕配置",
+      "type": 3,
+      "api": "csp_Config",
+      "searchable": 0,
+      "changeable": 0,
+      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json",
+      "style": {
+        "type": "rect",
+        "ratio": 1.5
+      }
+    },
+    {
+      "key": "py_测试",
+      "name": "测试(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/workbuddy/cs.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "Jable",
+      "api": "csp_Jable",
+      "name": "Jable",
+      "type": 3,
+      "jar": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/jar/CatVodSix.jar",
+      "ext": "proxy"
+    },
+    {
+      "key": "Nostr",
+      "name": "测试Nostr",
+      "type": 3,
+      "api": "csp_Nostr",
+      "homePage": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/workbuddy/cs.html"
+    },
+    {
+      "key": "简化版",
+      "name": "TMDB影视",
+      "type": 3,
+      "jar": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/jar/JJ-html0903-17.jar",
+      "api": "csp_JJhtml",
+      "searchable": 0,
+      "quickSearch": 0,
+      "filterable": 0,
+      "ext": {
+        "html": "/storage/emulated/0/AG/宝宝巴士/av.html",
+        "domain1": "jable.tv,missav.ws,surrit.com,fourhoi.com,hanime1.me,vdownload.hembed.com,123av.com,icdn.123av.me,javplayer.cc,xvideos.com,*.xvideos-cdn.com=10172",
+        "domain2": "xxx.example.com,cdn.example.com=10174"
+      }
+    },
+    {
+      "key": "push_agent",
+      "name": "推送",
+      "type": 3,
+      "api": "csp_Push",
+      "changeable": 0,
+      "timeout": 30,
+      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json"
+    }
+  ],
+  "hosts": [],
+  "lives": [
+    {
+      "name": "最强国内直播(合并版)",
+      "type": 0,
+      "url": "http://127.0.0.1:10079/c/3600/null/http://127.0.0.1:35456/all.m3u",
+      "ua": "okhttp/3.15",
+      "epg": "http://127.0.0.1:10079/p/0/proxy/http://epg.112114.xyz/?ch={name}&date={date}",
+      "logo": "http://127.0.0.1:10079/p/0/proxy/https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "🐬海豚佬xxx视频资源🔞",
+      "type": 0,
+      "ua": "okhttp",
+      "url": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/https://ghfast.top/https://raw.githubusercontent.com/FGBLH/HKL/refs/heads/main/xxx视频资源.txt"
+    },
+    {
+      "name": "捡的·php",
+      "type": 0,
+      "playerType": 2,
+      "url": "https://x315601.serv00.net/cr.php"
+    },
+    {
+      "group": "redirect",
+      "channels": [
+        {
+          "name": "redirect",
+          "urls": [
+            "proxy://do=live&type=live&proxy=&url="
+          ]
+        }
+      ]
+    }
+  ],
+  "doh": [
+    {
+      "name": "Google",
+      "url": "https://dns.google/dns-query",
+      "ips": [
+        "8.8.4.4",
+        "8.8.8.8"
+      ]
+    },
+    {
+      "name": "Cloudflare",
+      "url": "https://cloudflare-dns.com/dns-query",
+      "ips": [
+        "1.1.1.1",
+        "1.0.0.1",
+        "2606:4700:4700::1111",
+        "2606:4700:4700::1001"
+      ]
+    },
+    {
+      "name": "AdGuard",
+      "url": "https://dns.adguard.com/dns-query",
+      "ips": [
+        "94.140.14.140",
+        "94.140.14.141"
+      ]
+    },
+    {
+      "name": "DNSWatch",
+      "url": "https://resolver2.dns.watch/dns-query",
+      "ips": [
+        "84.200.69.80",
+        "84.200.70.40"
+      ]
+    },
+    {
+      "name": "Quad9",
+      "url": "https://dns.quad9.net/dns-quer",
+      "ips": [
+        "9.9.9.9",
+        "149.112.112.112"
+      ]
+    }
+  ],
+  "proxy": [
+    {
+      "name": "代理",
+      "hosts": [
+        "raw.githubusercontent.com",
+        "googlevideo.com",
+        "cdn.v82u1l.com",
+        "cdn.iz8qkg.com",
+        "cdn.kin6c1.com",
+        "c.biggggg.com",
+        "c.olddddd.com",
+        "haiwaikan.com",
+        "www.histar.tv",
+        "youtube.com",
+        "uhibo.com",
+        ".*boku.*",
+        ".*nivod.*",
+        "*.t4tv.hz.cz",
+        ".*ulivetv.*",
+        "challenges.cloudflare.com",
+        "*.cloudflare.com",
+        "xvideos-cdn.com",
+        "*.xvideos-cdn.com",
+        "*.xhcdn.com",
+        "xhcdn.com",
+        "w3.muvxgnu.cn",
+        "video.externulls.com",
+        "externulls.com",
+        "*.externulls.com",
+        "cloudfront.net",
+        "*.cloudfront.net",
+        "huarezs.com",
+        "*.huarezs.com",
+        "twimg.com",
+        "video.twimg.com",
+        "*.twimg.com",
+        "aaaaa.io",
+        "bad.news",
+        "*.bad.news",
+        "tiktokcdn.com",
+        "*.tiktokcdn.com"
+      ],
+      "urls": [
+        "http://127.0.0.1:10172"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "name": "proxy",
+      "hosts": [
+        "raw.githubusercontent.com",
+        "googlevideo.com",
+        "cdn.v82u1l.com",
+        "cdn.iz8qkg.com",
+        "cdn.kin6c1.com",
+        "c.biggggg.com",
+        "c.olddddd.com",
+        "haiwaikan.com",
+        "www.histar.tv",
+        "youtube.com",
+        "uhibo.com",
+        ".*boku.*",
+        ".*nivod.*",
+        "*.t4tv.hz.cz",
+        ".*ulivetv.*"
+      ]
+    },
+    {
+      "host": "www.djuu.com",
+      "rule": [
+        "mp4.djuu.com",
+        "m4a"
+      ]
+    },
+    {
+      "host": "www.sharenice.net",
+      "rule": [
+        "huoshan.com",
+        "/item/video/"
+      ],
+      "filter": []
+    },
+    {
+      "host": "www.sharenice.net",
+      "rule": [
+        "sovv.qianpailive.com",
+        "vid="
+      ],
+      "filter": []
+    },
+    {
+      "host": "www.sharenice.net",
+      "rule": [
+        "douyin.com",
+        "/play/"
+      ]
+    },
+    {
+      "host": "m.ysxs8.vip",
+      "rule": [
+        "ysting.ysxs8.vip:81",
+        "xmcdn.com"
+      ],
+      "filter": []
+    },
+    {
+      "host": "hdmoli.com",
+      "rule": [
+        ".m3u8"
+      ]
+    },
+    {
+      "host": "https://api.live.bilibili.com",
+      "rule": [
+        "bilivideo.com",
+        "/index.m3u8"
+      ],
+      "filter": [
+        "data.bilibili.com/log/web",
+        "i0.hdslb.com/bfs/live/"
+      ]
+    },
+    {
+      "host": "www.agemys.cc",
+      "rule": [
+        "cdn-tos",
+        "obj/tos-cn"
+      ]
+    },
+    {
+      "host": "www.fun4k.com",
+      "rule": [
+        "https://hd.ijycnd.com/play",
+        "index.m3u8"
+      ]
+    },
+    {
+      "host": "zjmiao.com",
+      "rule": [
+        "play.videomiao.vip/API.php",
+        "time=",
+        "key=",
+        "path="
+      ]
+    },
+    {
+      "name": "磁力广告",
+      "hosts": [
+        "magnet"
+      ],
+      "regex": [
+        "更多",
+        "社 區",
+        "x u u",
+        "最 新",
+        "直 播",
+        "更 新",
+        "社 区",
+        "有 趣",
+        "英皇体育",
+        "全中文AV在线",
+        "澳门皇冠赌场",
+        "哥哥快来",
+        "美女荷官",
+        "裸聊",
+        "新片首发",
+        "UUE29"
+      ]
+    }
+  ],
+  "parses": [],
+  "flags": [
+    "youku",
+    "qq",
+    "iqiyi",
+    "qiyi",
+    "letv",
+    "sohu",
+    "tudou",
+    "pptv",
+    "mgtv",
+    "wasu"
+  ],
+  "wallpaper": "址https://饭的动态壁纸.xxooo.cf",
+  "disabled_wallpaper": "http://www.kf666888.cn/api/tvbox/img"
+}

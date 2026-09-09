@@ -1,0 +1,11 @@
+{
+  "drives": [
+    {
+      "name": "alist.jar",
+      "search": true,
+      "searchable": true,
+      "server": "https://gyftest.banye.tech:8283"
+    }
+  ],
+  "danmu": true
+}

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>AV在线免费</title>
+<link rel="stylesheet" href="./style.css">
+<script>
+  window.__antMockPermissions = ["storage","network"];
+  window.__antMockAppId = 'com.avzxmf.hongguo';
+  window.__antMockTV = false;
+  window.__antMockFixtures = {};
+</script>
+</head>
+<body>
+<div id="app">
+
+  <main id="feedPage" class="feed-page">
+    <div class="feed-topbar">
+      <span class="feed-tab active">推荐</span>
+      <span class="feed-tab" id="feedCatBtn">分类</span>
+      <div class="feed-search-icon" id="feedSearchBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+    </div>
+    <div class="feed-container" id="feedContainer"></div>
+    <div class="feed-tip" id="feedTip">正在加载视频...</div>
+  </main>
+
+  <section id="categoryPage" class="page-overlay">
+    <header class="page-header">
+      <div class="header-back" data-close="category">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+      </div>
+      <h2>分类浏览</h2>
+    </header>
+    <div class="tree-wrap">
+      <aside class="tree-primary" id="treePrimary"></aside>
+      <div class="tree-secondary-wrap">
+        <div class="tree-secondary" id="treeSecondary"></div>
+        <div class="tree-videos">
+          <div class="video-grid" id="catGrid"></div>
+          <div class="load-more" id="catLoadMore">上拉加载更多</div>
+          <div class="empty-tip" id="catEmpty">请选择左侧分类</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="searchPage" class="page-overlay">
+    <div class="search-header">
+      <div class="search-back" data-close="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+      </div>
+      <div class="search-bar active">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="搜索影片、番号、女优..." autocomplete="off">
+      </div>
+      <span class="search-submit" id="searchSubmit">搜索</span>
+    </div>
+    <div class="search-hot" id="searchHot">
+      <h3>热门搜索</h3>
+      <div class="hot-tags" id="hotTags"></div>
+    </div>
+    <div class="search-results" id="searchResults" style="display:none">
+      <div class="video-grid" id="searchGrid"></div>
+      <div class="load-more" id="searchLoadMore">上拉加载更多</div>
+    </div>
+  </section>
+
+  <section id="minePage" class="page-overlay">
+    <div class="mine-header">
+      <div class="mine-avatar">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </div>
+      <div class="mine-info">
+        <h2>老司机</h2>
+        <p>观影愉快 · 注意身体</p>
+      </div>
+    </div>
+    <div class="mine-tabs">
+      <span class="mine-tab active" data-tab="fav">我的收藏</span>
+      <span class="mine-tab" data-tab="history">观看历史</span>
+    </div>
+    <div class="mine-content">
+      <div class="video-grid" id="mineGrid"></div>
+      <div class="empty-tip" id="mineEmpty">暂无记录，快去观影吧</div>
+    </div>
+  </section>
+
+  <section id="fullPlayerPage" class="page-overlay player-overlay">
+    <div class="player-wrap">
+      <video id="fullVideo" class="full-video" playsinline webkit-playsinline x5-playsinline></video>
+      <div class="player-loading" id="fullPlayerLoading" style="display:none"><div class="spinner"></div></div>
+      <div class="player-top-bar">
+        <div class="player-back" id="fullPlayerBack">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        </div>
+        <span class="player-title" id="fullPlayerTitle"></span>
+      </div>
+      <div class="player-center-play" id="fullCenterPlay" style="display:none">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <div class="player-bottom-bar">
+        <div class="player-progress" id="fullProgressBar">
+          <div class="progress-buffered" id="fullBuffered"></div>
+          <div class="progress-played" id="fullPlayed"></div>
+          <div class="progress-thumb" id="fullThumb"></div>
+        </div>
+        <div class="player-controls">
+          <span class="ctrl-btn" id="fullPlayPauseBtn">
+            <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </span>
+          <span class="ctrl-time" id="fullTime">00:00 / 00:00</span>
+          <span class="ctrl-btn ctrl-speed" id="fullSpeedBtn">1.0x</span>
+          <span class="ctrl-btn" id="fullMuteBtn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="tabbar">
+    <div class="tab-item active" data-tab="feed">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>首页</span>
+    </div>
+    <div class="tab-item" data-tab="category">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg><span>分类</span>
+    </div>
+    <div class="tab-item" data-tab="search">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>搜索</span>
+    </div>
+    <div class="tab-item" data-tab="mine">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>我的</span>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast"></div>
+  <div id="loading" class="loading-mask" style="display:none"><div class="spinner"></div></div>
+</div>
+<script src="./hls.min.js"></script>
+<script src="./ant-mock.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>

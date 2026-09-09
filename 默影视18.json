@@ -1,0 +1,1590 @@
+{
+  "spider": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/jar/pg.jar",
+  "sites": [
+    {
+      "key": "豆瓣",
+      "name": "豆瓣",
+      "type": 3,
+      "api": "csp_Douban",
+      "searchable": 0,
+      "changeable": 1,
+      "indexs": 1,
+      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json$$$https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/douban.json"
+    },
+    {
+      "key": "网盘配置",
+      "name": "网盘及彈幕配置",
+      "type": 3,
+      "api": "csp_Config",
+      "searchable": 0,
+      "changeable": 0,
+      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json",
+      "style": {
+        "type": "rect",
+        "ratio": 1.5
+      }
+    },
+    {
+      "key": "Nostr",
+      "name": "宝宝巴士(Nostr)",
+      "type": 3,
+      "api": "csp_Nostr",
+      "homePage": "https://tmd.920410.xyz/"
+    },
+    {
+      "key": "JavDBAPPNostr",
+      "name": "Javdb(Nostr)",
+      "type": 3,
+      "api": "csp_Nostr",
+      "homePage": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/html/JavDBAPP.html"
+    },
+    {
+      "key": "AV(Nostr)",
+      "name": "AV(Nostr)",
+      "type": 3,
+      "api": "csp_Nostr",
+      "homePage": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/html/%E5%AE%9D%E5%AE%9D%E5%B7%B4%E5%A3%AB/av.html"
+    },
+    {
+      "key": "Youtube",
+      "name": "Youtube",
+      "type": 3,
+      "api": "csp_Youtube",
+      "searchable": 1,
+      "quickSearch": 0,
+      "changeable": 0,
+      "timeout": 120,
+      "ext": {
+        "token": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json",
+        "json": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/youtube.json",
+        "type": "直播#新闻#剧集#电影#综艺#纪录片#音乐#体育#动物#风光#放松#4K#HDR#movie#music#documentary#bbc documentary#national geographic documentary",
+        "keywords": "排行榜,HOT,TRENDS,热门话题,热门趋势,热门综艺,热门电影,热门电视剧,小姐姐",
+        "codecs": "",
+        "proxy": "proxy",
+        "danmu": true
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.77
+      }
+    },
+    {
+      "key": "Missav",
+      "name": "MissAV(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/Miss%E8%87%AA%E5%8A%A8.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "GetAV",
+      "name": "GetAV(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/GetAV.py"
+    },
+    {
+      "key": "py_memo",
+      "name": "Memo(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/memo.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_123AV",
+      "name": "123AV(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/123AV.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "Netflav",
+      "name": "🧲Netflav",
+      "type": 3,
+      "api": "csp_Netflav",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "filterable": 0,
+      "timeout": 60,
+      "ext": "https://netflav5.com$$$proxy",
+      "style": {
+        "type": "rect",
+        "ratio": 1.5
+      }
+    },
+    {
+      "key": "csp_JavDb",
+      "name": "🧲JavDb",
+      "type": 3,
+      "api": "csp_JavDb",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "timeout": 60,
+      "style": {
+        "type": "rect",
+        "ratio": 1.78
+      },
+      "ext": "null$$$https://javdb.com$$$proxy"
+    },
+    {
+      "key": "py_javhd",
+      "name": "JavHD(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/javhd.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.78
+      }
+    },
+    {
+      "key": "py_AV01",
+      "name": "AV01(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/AV01.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "7mmtv",
+      "name": "7mmtv(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/7mmtv.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_MOTV",
+      "name": "MOTV(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/MOTV.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_jable",
+      "name": "Jable(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/jable.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "one点播",
+      "name": "one点播(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/one%E7%82%B9%E6%92%AD.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_51",
+      "name": "51吃瓜(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/adult/51%E5%90%B8%E7%93%9C.py",
+      "ext": {
+        "site": "https://cg51.com",
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "黑料不打烊",
+      "name": "黑料不打烊(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E9%BB%91%E6%96%99%E4%B8%8D%E6%89%93%E7%83%8A.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "2048短剧",
+      "name": "2048短剧(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/2048%E7%9F%AD%E5%89%A7.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "51短剧",
+      "name": "51短剧(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/51%E7%9F%AD%E5%89%A7.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "黄果短剧",
+      "name": "黄果短剧(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E9%BB%84%E6%9E%9C%E7%9F%AD%E5%89%A7%E4%BF%AE%E5%A4%8DDNS.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "youqibin",
+      "name": "Emby游骑滨",
+      "type": 3,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/emby.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "server": "https://emby666.alien666.de5.net:8443",
+        "username": "zw110708",
+        "password": "TEpM9AlP",
+        "thread": 1,
+        "proxy": "http://127.0.0.1:10172"
+      }
+    },
+    {
+      "key": "HG",
+      "name": "Emby-HG",
+      "type": 3,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/emby_proxy.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "server": "https://hgemby.qzz.io:443",
+        "username": "zw110708",
+        "password": "y6qdJnWC",
+        "thread": 1,
+        "proxy": "http://127.0.0.1:10172"
+      }
+    },
+    {
+      "key": "绿帽社区网",
+      "name": "绿帽社区网(py)",
+      "type": 3,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E7%BB%BF%E5%B8%BD%E7%A4%BE%E5%8C%BA%E7%BD%91.py",
+      "changeable": 1,
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "海角网",
+      "name": "海角网(py)",
+      "type": 3,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E6%B5%B7%E8%A7%92%E7%BD%91.py",
+      "changeable": 1,
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_Beeg",
+      "name": "大洋马Beeg(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/Beeg.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_fullhd",
+      "name": "大洋马Fullhd(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/fullhd.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "Bad.news",
+      "name": "Bad.news(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/Bad.news%E6%96%B0.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_truvaze",
+      "name": "推特精选(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/truvaze.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "123fun",
+      "name": "123fun(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/123fun.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "抖阴",
+      "name": "抖阴(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E6%8A%96%E9%98%B4.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_UUA",
+      "name": "UUA(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/UUA.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_糖心Vlog",
+      "name": "糖心Vlog(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E7%B3%96%E5%BF%83Vlog.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_UU视视",
+      "name": "UU视视(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/UU%E8%A7%86%E8%A7%86.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_168",
+      "name": "168导航(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/618%E5%AF%BC%E8%88%AA%E5%8A%A8%E6%80%81.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_溏心次元",
+      "name": "溏心次元(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E6%BA%8F%E5%BF%83%E6%AC%A1%E5%85%83.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_玩物社区",
+      "name": "玩物社区(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E7%8E%A9%E7%89%A9%E7%A4%BE%E5%8C%BA.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_小红薯APP",
+      "name": "小红薯APP(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E5%B0%8F%E7%BA%A2%E8%96%AFAPP.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_推特APP",
+      "name": "推特APP.py(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E6%8E%A8%E7%89%B9APP.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_rsp",
+      "name": "肉视频(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/rsp.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_西瓜视频",
+      "name": "西瓜视频(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E8%A5%BF%E7%93%9C%E8%A7%86%E9%A2%91.py",
+      "ext": {
+        "plp": "",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_一起草",
+      "name": "一起草(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E4%B8%80%E8%B5%B7%E8%8D%89.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "LissAV",
+      "name": "LissAV(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/LissAV.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_Hanime",
+      "name": "Hanime动漫(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/Hanime%28%E6%94%B9%29.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "草榴社区",
+      "name": "草榴社区(py)",
+      "type": 3,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E8%8D%89%E6%A6%B4%E7%A4%BE%E5%8C%BA.py",
+      "changeable": 1,
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "熊猫秒播",
+      "name": "熊猫秒播(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E7%86%8A%E7%8C%AB%E7%A7%92%E6%92%AD.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_好色TV",
+      "name": "好色TV(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E5%A5%BD%E8%89%B2TV.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "Phb.py",
+      "name": "Pornhub(py)",
+      "type": 3,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/adult/Phb.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "Xvd.py",
+      "name": "Xvideos(py)",
+      "type": 3,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/adult/Xvd.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "Xhm.py",
+      "name": "Xhm(py)",
+      "type": 3,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/Xhm.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "采集聚合成人",
+      "name": "采集聚合成人(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E9%87%87%E9%9B%86%E8%81%9A%E5%90%88%E6%88%90%E4%BA%BA.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_禁片天堂分类",
+      "name": "禁片天堂(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E7%A6%81%E7%89%87%E5%A4%A9%E5%A0%82%EF%BC%88%E5%88%86%E7%B1%BB%EF%BC%89.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_Avbebe",
+      "name": "Avbebe(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/Avbebe.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      },
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      }
+    },
+    {
+      "key": "py_taiav",
+      "name": "Taiav(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/taiav.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "py_黑料",
+      "name": "黑料(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E9%BB%91%E6%96%99.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "玩偶",
+      "name": "玩偶TV(PG)",
+      "type": 3,
+      "api": "csp_Doll",
+      "searchable": 1,
+      "recordable": 0,
+      "style": {
+        "type": "rect",
+        "ratio": 1.309
+      },
+      "ext": "proxy"
+    },
+    {
+      "key": "py_黄色仓库",
+      "name": "黄色仓库(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E9%BB%84%E8%89%B2%E4%BB%93%E5%BA%93.py",
+      "style": {
+        "type": "rect",
+        "ratio": 1.33
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "169bbs",
+      "name": "🧲169bbs",
+      "type": 3,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/169%E6%96%B0.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "playerType": 2,
+      "filterable": 1,
+      "style": {
+        "type": "rect",
+        "ratio": 1.48
+      },
+      "ext": "{\"pan_115_cookie\":\"UID=341927677_R2_1782720298;CID=9be2fb585f698c7d9c44bef947e4a6ca;SEID=e407eaddd20c663a0c53cdd77ab01fd9f148739cf7cfca5930aa058a56068d2d284b7aeaccb300b5103c3d2de68cce6f9828ae1a31f64ecd555bf735;KID=351ddb217a48b4b6e228dedb5a477dca\",\"confirm_115\":\"0\"}"
+    },
+    {
+      "key": "csp_JavBus",
+      "name": "🧲JavBus",
+      "type": 3,
+      "api": "csp_JavBus",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "timeout": 60,
+      "style": {
+        "type": "rect",
+        "ratio": 0.75
+      },
+      "ext": "null$$$https://www.javbus.com$$$proxy"
+    },
+    {
+      "key": "PikPakShare",
+      "name": "PikPak分享",
+      "type": 3,
+      "api": "csp_PikPakShare",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "filterable": 0,
+      "timeout": 60,
+      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json$$$https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/pikpakclass.json",
+      "style": {
+        "type": "list",
+        "ratio": 1.1
+      }
+    },
+    {
+      "key": "115Share",
+      "name": "115云盘分享",
+      "type": 3,
+      "api": "csp_P115Share",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 0,
+      "filterable": 0,
+      "timeout": 120,
+      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json$$$https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/115share.txt$$$db$$$1",
+      "style": {
+        "type": "list",
+        "ratio": 1.1
+      }
+    },
+    {
+      "key": "csp_Sukebei",
+      "name": "🧲Sukebei",
+      "type": 3,
+      "api": "csp_Sukebei",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "style": {
+        "type": "rect",
+        "ratio": 1.48
+      },
+      "ext": "null$$$https://sukebei.nyaa.si$$$proxy2"
+    },
+    {
+      "key": "SeHuaTang",
+      "name": "🧲色花堂",
+      "type": 3,
+      "api": "csp_SeHuaTang",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "filterable": 0,
+      "timeout": 60,
+      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json$$$null$$$proxy",
+      "style": {
+        "type": "list",
+        "ratio": 1.1
+      }
+    },
+    {
+      "key": "py_电视直播",
+      "name": "电视直播(py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/py/%E8%87%AA%E7%BC%96/%E7%94%B5%E8%A7%86%E7%9B%B4%E6%92%AD.py",
+      "style": {
+        "type": "list",
+        "ratio": 1.1
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/"
+      }
+    },
+    {
+      "key": "污漫天堂",
+      "name": "污漫天堂[漫画](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/%E6%B1%A1%E6%BC%AB%E5%A4%A9%E5%A0%82.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "老司机禁漫",
+      "name": "老司机禁漫[漫画](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/%E8%80%81%E5%8F%B8%E6%9C%BA%E7%A6%81%E6%BC%AB.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "绅士漫画",
+      "name": "绅士漫画[漫画](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/%E7%BB%85%E5%A3%AB%E6%BC%AB%E7%94%BB.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "aman漫画",
+      "name": "aman漫画[漫画](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/aman%E6%BC%AB%E7%94%BB.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "o5ho漫画",
+      "name": "o5ho漫画[漫画](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/ho5ho%E6%BC%AB%E7%94%BB%E6%BA%90.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "Acg漫画",
+      "name": "Acg漫画[漫画](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/Acg%E6%BC%AB%E7%94%BB%E7%BD%91.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "龙禁漫",
+      "name": "龙禁漫[漫画](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/%E9%BE%99%E7%A6%81%E6%BC%AB.py",
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "抖阴小说",
+      "name": "抖阴小说[小说](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/%E6%8A%96%E9%98%B4%E5%B0%8F%E8%AF%B4.py",
+      "style": {
+        "type": "list",
+        "ratio": 1.1
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "色情小说",
+      "name": "色情小说[小说](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/%E8%89%B2%E6%83%85%E5%B0%8F%E8%AF%B4.py",
+      "style": {
+        "type": "list",
+        "ratio": 1.1
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "夜读小说",
+      "name": "夜读小说[小说](py)",
+      "type": 3,
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 0,
+      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/%E6%BC%AB%E7%94%BB/%E5%A4%9C%E8%AF%BB%E5%B0%8F%E8%AF%B4.py",
+      "style": {
+        "type": "list",
+        "ratio": 1.1
+      },
+      "ext": {
+        "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
+        "proxy": {
+          "http": "http://127.0.0.1:10172",
+          "https": "http://127.0.0.1:10172"
+        }
+      }
+    },
+    {
+      "key": "push_agent",
+      "name": "推送",
+      "type": 3,
+      "api": "csp_Push",
+      "changeable": 0,
+      "timeout": 30,
+      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json"
+    }
+  ],
+  "hosts": [],
+  "lives": [
+    {
+      "name": "最强国内直播(合并版)",
+      "type": 0,
+      "url": "http://127.0.0.1:10079/c/3600/null/http://127.0.0.1:35456/all.m3u",
+      "ua": "okhttp/3.15",
+      "epg": "http://127.0.0.1:10079/p/0/proxy/http://epg.112114.xyz/?ch={name}&date={date}",
+      "logo": "http://127.0.0.1:10079/p/0/proxy/https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "捡的·php",
+      "type": 0,
+      "playerType": 2,
+      "url": "https://x315601.serv00.net/cr.php"
+    },
+    {
+      "group": "redirect",
+      "channels": [
+        {
+          "name": "redirect",
+          "urls": [
+            "proxy://do=live&type=live&proxy=&url="
+          ]
+        }
+      ]
+    }
+  ],
+  "doh": [
+    {
+      "name": "Google",
+      "url": "https://dns.google/dns-query",
+      "ips": [
+        "8.8.4.4",
+        "8.8.8.8"
+      ]
+    },
+    {
+      "name": "Cloudflare",
+      "url": "https://cloudflare-dns.com/dns-query",
+      "ips": [
+        "1.1.1.1",
+        "1.0.0.1",
+        "2606:4700:4700::1111",
+        "2606:4700:4700::1001"
+      ]
+    },
+    {
+      "name": "AdGuard",
+      "url": "https://dns.adguard.com/dns-query",
+      "ips": [
+        "94.140.14.140",
+        "94.140.14.141"
+      ]
+    },
+    {
+      "name": "DNSWatch",
+      "url": "https://resolver2.dns.watch/dns-query",
+      "ips": [
+        "84.200.69.80",
+        "84.200.70.40"
+      ]
+    },
+    {
+      "name": "Quad9",
+      "url": "https://dns.quad9.net/dns-quer",
+      "ips": [
+        "9.9.9.9",
+        "149.112.112.112"
+      ]
+    }
+  ],
+  "proxy": [
+    {
+      "name": "代理",
+      "hosts": [
+        "raw.githubusercontent.com",
+        "googlevideo.com",
+        "cdn.v82u1l.com",
+        "cdn.iz8qkg.com",
+        "cdn.kin6c1.com",
+        "c.biggggg.com",
+        "c.olddddd.com",
+        "haiwaikan.com",
+        "www.histar.tv",
+        "youtube.com",
+        "uhibo.com",
+        ".*boku.*",
+        ".*nivod.*",
+        "*.t4tv.hz.cz",
+        ".*ulivetv.*",
+        "xvideos-cdn.com",
+        "*.xvideos-cdn.com",
+        "*.xhcdn.com",
+        "xhcdn.com",
+        "w3.muvxgnu.cn",
+        "video.externulls.com",
+        "externulls.com",
+        "*.externulls.com",
+        "cloudfront.net",
+        "*.cloudfront.net",
+        "huarezs.com",
+        "*.huarezs.com",
+        "twimg.com",
+        "video.twimg.com",
+        "*.twimg.com",
+        "aaaaa.io",
+        "bad.news",
+        "*.bad.news",
+        "tiktokcdn.com",
+        "*.tiktokcdn.com",
+        "files.iw01.xyz",
+        "iw01.xyz",
+        "*.iw01.xyz",
+        "cdn.uameta.ai",
+        "uameta.ai",
+        "*.uameta.ai",
+        "jable.tv",
+        "missav.ws",
+        "surrit.com",
+        "fourhoi.com",
+        "hanime1.me",
+        "vdownload.hembed.com",
+        "123av.com",
+        "icdn.123av.me",
+        "javplayer.cc",
+        "xvideos.com",
+        "*.xvideos-cdn.com",
+        "supjav.com",
+        "img.supjav.com",
+        "javdb.com",
+        "jdforrepam.com",
+        "c0.jdbstatic.com",
+        "av-9du.pages.dev",
+        "challenges.cloudflare.com",
+        "*.cloudflare.com",
+        "supjav.com",
+        "*.supremejav.com",
+        "img.supjav.com"
+      ],
+      "urls": [
+        "http://127.0.0.1:10172"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "name": "proxy",
+      "hosts": [
+        "raw.githubusercontent.com",
+        "googlevideo.com",
+        "cdn.v82u1l.com",
+        "cdn.iz8qkg.com",
+        "cdn.kin6c1.com",
+        "c.biggggg.com",
+        "c.olddddd.com",
+        "haiwaikan.com",
+        "www.histar.tv",
+        "youtube.com",
+        "uhibo.com",
+        ".*boku.*",
+        ".*nivod.*",
+        "*.t4tv.hz.cz",
+        ".*ulivetv.*"
+      ]
+    },
+    {
+      "host": "www.djuu.com",
+      "rule": [
+        "mp4.djuu.com",
+        "m4a"
+      ]
+    },
+    {
+      "host": "www.sharenice.net",
+      "rule": [
+        "huoshan.com",
+        "/item/video/"
+      ],
+      "filter": []
+    },
+    {
+      "host": "www.sharenice.net",
+      "rule": [
+        "sovv.qianpailive.com",
+        "vid="
+      ],
+      "filter": []
+    },
+    {
+      "host": "www.sharenice.net",
+      "rule": [
+        "douyin.com",
+        "/play/"
+      ]
+    },
+    {
+      "host": "m.ysxs8.vip",
+      "rule": [
+        "ysting.ysxs8.vip:81",
+        "xmcdn.com"
+      ],
+      "filter": []
+    },
+    {
+      "host": "hdmoli.com",
+      "rule": [
+        ".m3u8"
+      ]
+    },
+    {
+      "host": "https://api.live.bilibili.com",
+      "rule": [
+        "bilivideo.com",
+        "/index.m3u8"
+      ],
+      "filter": [
+        "data.bilibili.com/log/web",
+        "i0.hdslb.com/bfs/live/"
+      ]
+    },
+    {
+      "host": "www.agemys.cc",
+      "rule": [
+        "cdn-tos",
+        "obj/tos-cn"
+      ]
+    },
+    {
+      "host": "www.fun4k.com",
+      "rule": [
+        "https://hd.ijycnd.com/play",
+        "index.m3u8"
+      ]
+    },
+    {
+      "host": "zjmiao.com",
+      "rule": [
+        "play.videomiao.vip/API.php",
+        "time=",
+        "key=",
+        "path="
+      ]
+    },
+    {
+      "name": "磁力广告",
+      "hosts": [
+        "magnet"
+      ],
+      "regex": [
+        "更多",
+        "社 區",
+        "x u u",
+        "最 新",
+        "直 播",
+        "更 新",
+        "社 区",
+        "有 趣",
+        "英皇体育",
+        "全中文AV在线",
+        "澳门皇冠赌场",
+        "哥哥快来",
+        "美女荷官",
+        "裸聊",
+        "新片首发",
+        "UUE29"
+      ]
+    }
+  ],
+  "parses": [],
+  "flags": [
+    "youku",
+    "qq",
+    "iqiyi",
+    "qiyi",
+    "letv",
+    "sohu",
+    "tudou",
+    "pptv",
+    "mgtv",
+    "wasu"
+  ],
+  "wallpaper": "址https://饭的动态壁纸.xxooo.cf",
+  "disabled_wallpaper": "http://www.kf666888.cn/api/tvbox/img"
+}
