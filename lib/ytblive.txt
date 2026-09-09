@@ -1,0 +1,36 @@
+🔴港澳台,#genre#
+TVBSNEWS,http://127.0.0.1:9978/proxy?do=yt&proxy=proxy&type=mpd&keyword=TVBS+NEWS直播
+TVBS新聞台,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=TVBS新聞台直播
+東森新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=東森新聞 51 頻道
+東森財經新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=東森財經新聞直播
+中天新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=CTI中天新聞24小時HD直播
+中天新聞,http://127.0.0.1:9978/proxy?do=yt&proxy=proxy&type=mpd&keyword=中天新聞直播
+中視新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=中視新聞直播
+台視新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=台視新聞台HD 24 小時線上直播
+民視新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=民視新聞直播
+公視新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=公視新聞直播
+寰宇新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=寰宇新聞台 24小時線上直播
+寰宇新聞台灣台,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=寰宇新聞台灣台直播
+中天娛樂,http://127.0.0.1:9978/proxy?do=yt&proxy=proxy&type=mpd&keyword=中天娛樂直播
+凤凰卫视资讯,http://127.0.0.1:9978/proxy?do=yt&proxy=proxy&type=mpd&keyword=鳳凰衛視資訊直播
+三立新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=三立新聞直播
+三立LIVE,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=🔴海外直播 三立新聞24小時LIVE
+三立INEWS,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=三立INEWS直播
+鏡新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=鏡新聞直播
+CCTV4,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=CCTV中文国际直播
+24h马拉松直播,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=24h马拉松直播直播
+CGTN,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=CGTN直播
+台灣地震監視,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=台灣地震監視直播
+Japan News,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=Japan+News直播
+Al Jazeera,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=Al+Jazeera直播
+華視新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=华视新闻直播
+華視新聞,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=華視新聞直播
+🔴動畫片,#genre#
+小猪佩奇,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=Peppa+Pig直播
+CoComelon,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=CoComelon直播
+隨機兒歌,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=寶寶好習慣直播
+🔴日本,#genre#
+ウェザーニュース,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=ウェザーニュース直播
+🔴欧洲,#genre#
+Euronews,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=Euronews 直播
+Sky News,http://127.0.0.1:9978/proxy?do=yt&type=mpd&proxy=proxy&keyword=Sky News 直播

@@ -1,0 +1,13 @@
+{
+  "drives": [
+    {
+      "name": "webdav.router",
+      "search": true,
+      "searchable": true,
+      "server": "https://gyftest.banye.tech:8283",
+      "path": "/dav",
+      "user": "banye",
+      "pass": "niubi"
+    }
+  ]
+}
