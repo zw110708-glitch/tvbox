@@ -1233,6 +1233,7 @@
     {
       "name": "代理",
       "hosts": [
+"raw.githubusercontent.com"
         "googlevideo.com",
         "cdn.v82u1l.com",
         "cdn.iz8qkg.com",
