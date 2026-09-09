@@ -1,5 +1,5 @@
 {
-  "spider": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/jar/pg.jar",
+  "spider": "https://raw.githubusercontent.com/zw110708-glitch/tvbox/main/jar/pg.jar",
   "sites": [
     {
       "key": "豆瓣",
@@ -9,7 +9,7 @@
       "searchable": 0,
       "changeable": 1,
       "indexs": 1,
-      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json$$$https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/douban.json"
+      "ext": "https://raw.githubusercontent.com/zw110708-glitch/tvbox/main/lib/zhengjinsong.json$$$https://raw.githubusercontent.com/zw110708-glitch/tvbox/main/lib/douban.json"
     },
     {
       "key": "网盘配置",
@@ -18,7 +18,7 @@
       "api": "csp_Config",
       "searchable": 0,
       "changeable": 0,
-      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json",
+      "ext": "https://raw.githubusercontent.com/zw110708-glitch/tvbox/main/lib/zhengjinsong.json",
       "style": {
         "type": "rect",
         "ratio": 1.5
@@ -31,7 +31,7 @@
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1,
-      "api": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/workbuddy/cs.py",
+      "api": "https://raw.githubusercontent.com/zw110708-glitch/tvbox/main/workbuddy/cs.py",
       "ext": {
         "plp": "http://127.0.0.1:10079/p/0/127.0.0.1:10172/",
         "proxy": {
@@ -45,7 +45,7 @@
       "api": "csp_Jable",
       "name": "Jable",
       "type": 3,
-      "jar": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/jar/CatVodSix.jar",
+      "jar": "https://raw.githubusercontent.com/zw110708-glitch/tvbox/main/jar/CatVodSix.jar",
       "ext": "proxy"
     },
     {
@@ -53,13 +53,13 @@
       "name": "测试Nostr",
       "type": 3,
       "api": "csp_Nostr",
-      "homePage": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/workbuddy/cs.html"
+      "homePage": "https://raw.githubusercontent.com/zw110708-glitch/tvbox/main/workbuddy/cs.html"
     },
     {
       "key": "简化版",
       "name": "TMDB影视",
       "type": 3,
-      "jar": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/jar/JJ-html0903-17.jar",
+      "jar": "https://raw.githubusercontent.com/zw110708-glitch/tvbox/main/jar/JJ-html0903-17.jar",
       "api": "csp_JJhtml",
       "searchable": 0,
       "quickSearch": 0,
@@ -77,7 +77,7 @@
       "api": "csp_Push",
       "changeable": 0,
       "timeout": 30,
-      "ext": "https://cdn.jsdelivr.net/gh/zw110708-glitch/tvbox@main/lib/zhengjinsong.json"
+      "ext": "https://raw.githubusercontent.com/zw110708-glitch/tvbox/main/lib/zhengjinsong.json"
     }
   ],
   "hosts": [],
